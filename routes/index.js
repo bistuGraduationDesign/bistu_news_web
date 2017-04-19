@@ -13,27 +13,27 @@ var upload = require("./upload");
 
 module.exports = function(app) {
 
-  app.get('/', checkStatus.checkNotLogin);
+  //app.get('/', checkStatus.checkNotLogin);
   app.get("/", function(req, res) {
     res.render("index", {});
   });
 
-  app.get('/signin', checkStatus.checkNotLogin);
-  app.get("/signin", function(req, res) {
-    res.render("signin", {});
+  // app.get('/sign', checkStatus.checkNotLogin);
+  app.get("/sign", function(req, res) {
+    res.render("sign", {});
   });
 
-  app.get('/verificationCode/:random', checkStatus.checkNotLogin);
+  // app.get('/verificationCode/:random', checkStatus.checkNotLogin);
   app.get('/verificationCode/:random', function(req, res) {
     verCode.changeVerCode(req, res);
   });
 
-  app.post('/checkVerCode', checkStatus.checkNotLogin);
+  // app.post('/checkVerCode', checkStatus.checkNotLogin);
   app.post('/checkVerCode', function(req, res) {
     verCode.checkVerCode(req, res);
   });
 
-  app.post('/signin', checkStatus.checkNotLogin);
+  // app.post('/signin', checkStatus.checkNotLogin);
   app.post('/signin', function(req, res) {
     //生成密码的 md5 值
     var md5 = crypto.createHash('md5');
@@ -54,6 +54,7 @@ module.exports = function(app) {
           state: false,
           info: "密码错误"
         };
+        return res.send(msg);
         //密码错误则跳转到登录页
       }
       //用户名密码都匹配后，将用户信息存入 session
@@ -66,7 +67,7 @@ module.exports = function(app) {
     });
   });
 
-  app.post('/reg', checkStatus.checkNotLogin);
+  // app.post('/reg', checkStatus.checkNotLogin);
   app.post('/reg', function(req, res) {
     var password = req.body.password;
     var password_re = req.body['passwordrepeat'];
@@ -116,7 +117,7 @@ module.exports = function(app) {
     });
   });
 
-  app.get('/music', checkStatus.checkLogin);
+  // app.get('/music', checkStatus.checkLogin);
   app.get("/music", function(req, res) {
     var user = req.session.user;
     // an example using an object instead of an array
@@ -178,12 +179,12 @@ module.exports = function(app) {
 
   });
 
-  app.get('/upload', checkStatus.checkLogin);
+  // app.get('/upload', checkStatus.checkLogin);
   app.get("/upload", function(req, res) {
     res.render("upload", {});
   });
 
-  app.post('/upload-file', checkStatus.checkLogin);
+  // app.post('/upload-file', checkStatus.checkLogin);
   app.post("/upload-file", multipart(), function(req, res) {
     async.waterfall([
       function(callback) {
@@ -262,7 +263,7 @@ module.exports = function(app) {
     });
   });
 
-  app.post('/play', checkStatus.checkLogin);
+  // app.post('/play', checkStatus.checkLogin);
   app.post("/play", function(req, res) {
 
     async.waterfall([
@@ -301,7 +302,7 @@ module.exports = function(app) {
 
   });
 
-  app.post('/getByName', checkStatus.checkLogin);
+  // app.post('/getByName', checkStatus.checkLogin);
   app.post("/getByName", function(req, res) {
     Music.getByName_more(req.body.name, function(err, musics) {
       if (err) {
@@ -319,7 +320,7 @@ module.exports = function(app) {
     });
   });
 
-  app.get('/logout', checkStatus.checkLogin);
+  // app.get('/logout', checkStatus.checkLogin);
   app.get("/logout", function(req, res) {
     req.session.user = null;
     res.redirect("/");

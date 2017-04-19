@@ -1,6 +1,6 @@
 module.exports = {
-	cookieSecret: "musicWeb",
-	db: "musicWeb",
+	cookieSecret: "newsWeb",
+	db: "newsWeb",
 	host: "localhost",
 	port: 27017,
 	serverPort: 3000,
