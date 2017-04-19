@@ -1,2 +1,2 @@
-# bistu_music_web
-bistu_music_web
+# bistu_news_web
+bistu_news_web
