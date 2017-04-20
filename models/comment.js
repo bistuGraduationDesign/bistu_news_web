@@ -9,7 +9,7 @@ function Comments(comment) {
 
 module.exports = Comments;
 
-//存储用户信息
+//存储评论信息
 Comments.prototype.save = function(callback) {
 	var date = new Date(Date.now() + (8 * 60 * 60 * 1000));
 
@@ -30,7 +30,7 @@ Comments.prototype.save = function(callback) {
 				mongodb.close();
 				return callback(err); //错误，返回 err 信息
 			}
-			//将用户数据插入 comments 集合
+			//将评论数据插入 comments 集合
 			collection.insert(comments, {
 				safe: true
 			}, function(err, comments) {
@@ -38,7 +38,7 @@ Comments.prototype.save = function(callback) {
 				if (err) {
 					return callback(err);
 				}
-				callback(null, comments.ops[0]); //成功！err 为 null，并返回存储后的用户文档
+				callback(null, comments.ops[0]); //成功！err 为 null，并返回存储后的评论文档
 			});
 		});
 	});
@@ -56,7 +56,7 @@ Comments.prototype.getByName = function(name, callback) {
 				mongodb.close();
 				return callback(err); //错误，返回 err 信息
 			}
-			//查找用户名（name键）值为 name 一个文档
+			//查找评论名（name键）值为 name 一个文档
 			collection.find({
 				news: new RegExp(name)
 			}, {

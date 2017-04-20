@@ -4,21 +4,19 @@ function News(news) {
   this.name = news.name;
   this.time = news.time;
   this.type = news.type;
-  this.comments = news.comments;
 };
 
 module.exports = News;
 
-//存储用户信息
+//存储新闻信息
 News.prototype.save = function(callback) {
   var date = new Date(Date.now() + (8 * 60 * 60 * 1000));
 
   var news = {
-    name: this.name, //音乐名
-    type: this.type, //音乐类型
-    commentCount: 0, //音乐播放次数，用以统计热度
-    time: this.time, //首次上传时间
-    comments: this.comments
+    name: this.name, //新闻名
+    type: this.type, //新闻类型
+    commentCount: 0, //新闻播放次数，用以统计热度
+    time: this.time //首次上传时间
   };
   //打开数据库
   mongodb.open(function(err, db) {
@@ -31,7 +29,7 @@ News.prototype.save = function(callback) {
         mongodb.close();
         return callback(err); //错误，返回 err 信息
       }
-      //将用户数据插入 news 集合
+      //将新闻数据插入 news 集合
       collection.insert(news, {
         safe: true
       }, function(err, news) {
@@ -39,7 +37,7 @@ News.prototype.save = function(callback) {
         if (err) {
           return callback(err);
         }
-        callback(null, news.ops[0]); //成功！err 为 null，并返回存储后的用户文档
+        callback(null, news.ops[0]); //成功！err 为 null，并返回存储后的新闻文档
       });
     });
   });
@@ -57,7 +55,7 @@ News.prototype.getByName = function(name, callback) {
         mongodb.close();
         return callback(err); //错误，返回 err 信息
       }
-      //查找用户名（name键）值为 name 一个文档
+      //查找新闻名（name键）值为 name 一个文档
       collection.findOne({
         name: name
       }, function(error, news) {
@@ -84,7 +82,7 @@ News.prototype.getByName_more = function(name, callback) {
         mongodb.close();
         return callback(err); //错误，返回 err 信息
       }
-      //查找用户名（name键）值为 name 一个文档
+      //查找新闻名（name键）值为 name 一个文档
       collection.find({
         name: new RegExp(name)
       }, {

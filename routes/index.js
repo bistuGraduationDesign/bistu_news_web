@@ -6,6 +6,7 @@ var async = require("async");
 var settings = require("../settings");
 var User = require("../models/user");
 var news = require("../models/news");
+var comments = require("../models/comment");
 
 var upload = require("./upload");
 
