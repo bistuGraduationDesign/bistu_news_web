@@ -44,7 +44,7 @@ Comments.prototype.save = function(callback) {
 	});
 };
 
-Comments.prototype.getByName = function(name, callback) {
+Comments.getByName = function(name, callback) {
 	//打开数据库
 	mongodb.open(function(err, db) {
 		if (err) {

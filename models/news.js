@@ -43,7 +43,7 @@ News.prototype.save = function(callback) {
   });
 };
 
-News.prototype.getByName = function(name, callback) {
+News.getByName = function(name, callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {
@@ -70,7 +70,7 @@ News.prototype.getByName = function(name, callback) {
   });
 };
 
-News.prototype.getByName_more = function(name, callback) {
+News.getByName_more = function(name, callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {
@@ -98,7 +98,7 @@ News.prototype.getByName_more = function(name, callback) {
   });
 };
 
-News.prototype.getByType = function(type, callback) {
+News.getByType = function(type, callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {
@@ -152,7 +152,7 @@ News.prototype.getByHot = function(callback) {
   });
 };
 
-News.prototype.getByTime = function(callback) {
+News.getByTime = function(callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {
@@ -180,7 +180,7 @@ News.prototype.getByTime = function(callback) {
 };
 
 //更新一篇文章及其相关信息
-News.prototype.addTimes = function(name, callback) {
+News.addTimes = function(name, callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {
