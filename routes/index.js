@@ -5,10 +5,8 @@ var async = require("async");
 
 var settings = require("../settings");
 var User = require("../models/user");
-var Music = require("../models/music");
+var news = require("../models/news");
 
-var verCode = require("./verCode");
-var checkStatus = require("./checkStatus");
 var upload = require("./upload");
 
 module.exports = function(app) {
@@ -21,16 +19,6 @@ module.exports = function(app) {
   // app.get('/sign', checkStatus.checkNotLogin);
   app.get("/sign", function(req, res) {
     res.render("sign", {});
-  });
-
-  // app.get('/verificationCode/:random', checkStatus.checkNotLogin);
-  app.get('/verificationCode/:random', function(req, res) {
-    verCode.changeVerCode(req, res);
-  });
-
-  // app.post('/checkVerCode', checkStatus.checkNotLogin);
-  app.post('/checkVerCode', function(req, res) {
-    verCode.checkVerCode(req, res);
   });
 
   // app.post('/signin', checkStatus.checkNotLogin);

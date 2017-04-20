@@ -44,7 +44,7 @@ User.prototype.save = function(callback) {
   });
 };
 
-User.get = function(name, callback) {
+User.prototype.get = function(name, callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {

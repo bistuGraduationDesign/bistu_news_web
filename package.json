@@ -1,5 +1,5 @@
 {
-  "name": "bistu-data-minging-show",
+  "name": "bistu-news-web",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -12,7 +12,6 @@
     "ejs": "*",
     "mongodb": "^2.0.*",
     "connect-mongo":"*",
-    "ccap" : "^0.6.10",
     "node-gyp" : "^3.4.0",
     "connect-multiparty": "~1.2.5",
     "async" : "~1.5.0"

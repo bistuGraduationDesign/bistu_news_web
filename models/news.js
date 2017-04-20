@@ -1,11 +1,10 @@
 var mongodb = require('./db');
-var comment = require('./comment');
 
 function News(news) {
   this.name = news.name;
   this.time = news.time;
   this.type = news.type;
-  this.comments=news.comments;
+  this.comments = news.comments;
 };
 
 module.exports = News;
@@ -19,20 +18,20 @@ News.prototype.save = function(callback) {
     type: this.type, //音乐类型
     commentCount: 0, //音乐播放次数，用以统计热度
     time: this.time, //首次上传时间
-    comments:this.comments
+    comments: this.comments
   };
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {
       return callback(err); //错误，返回 err 信息
     }
-    //读取 musics 集合
-    db.collection('musics', function(err, collection) {
+    //读取 news 集合
+    db.collection('news', function(err, collection) {
       if (err) {
         mongodb.close();
         return callback(err); //错误，返回 err 信息
       }
-      //将用户数据插入 musics 集合
+      //将用户数据插入 news 集合
       collection.insert(news, {
         safe: true
       }, function(err, news) {
@@ -46,14 +45,14 @@ News.prototype.save = function(callback) {
   });
 };
 
-Music.getByName = function(name, callback) {
+News.prototype.getByName = function(name, callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {
       return callback(err); //错误，返回 err 信息
     }
-    //读取 musics 集合
-    db.collection('musics', function(err, collection) {
+    //读取 news 集合
+    db.collection('news', function(err, collection) {
       if (err) {
         mongodb.close();
         return callback(err); //错误，返回 err 信息
@@ -73,14 +72,14 @@ Music.getByName = function(name, callback) {
   });
 };
 
-Music.getByName_more = function(name, callback) {
+News.prototype.getByName_more = function(name, callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {
       return callback(err); //错误，返回 err 信息
     }
-    //读取 musics 集合
-    db.collection('musics', function(err, collection) {
+    //读取 news 集合
+    db.collection('news', function(err, collection) {
       if (err) {
         mongodb.close();
         return callback(err); //错误，返回 err 信息
@@ -90,24 +89,24 @@ Music.getByName_more = function(name, callback) {
         name: new RegExp(name)
       }, {
         limit: 12
-      }).toArray(function(err, musics) {
+      }).toArray(function(err, news) {
         mongodb.close();
         if (err) {
           return callback(err);
         }
-        callback(null, musics);
+        callback(null, news);
       });
     });
   });
 };
 
-Music.getByType = function(type, callback) {
+News.prototype.getByType = function(type, callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {
       return callback(err); //错误，返回 err 信息
     }
-    db.collection('musics', function(err, collection) {
+    db.collection('news', function(err, collection) {
       if (err) {
         mongodb.close();
         return callback(err); //错误，返回 err 信息
@@ -117,25 +116,25 @@ Music.getByType = function(type, callback) {
         "type": type
       }, {
         limit: 12
-      }).toArray(function(err, musics) {
+      }).toArray(function(err, news) {
         mongodb.close();
         if (err) {
           return callback(err);
         }
-        callback(null, musics);
+        callback(null, news);
       });
     });
   });
 };
 
-Music.getByHot = function(callback) {
+News.prototype.getByHot = function(callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {
       return callback(err); //错误，返回 err 信息
     }
-    //读取 musics 集合
-    db.collection('musics', function(err, collection) {
+    //读取 news 集合
+    db.collection('news', function(err, collection) {
       if (err) {
         mongodb.close();
         return callback(err); //错误，返回 err 信息
@@ -144,25 +143,25 @@ Music.getByHot = function(callback) {
         limit: 12
       }).sort({
         times: -1
-      }).toArray(function(err, musics) {
+      }).toArray(function(err, news) {
         mongodb.close();
         if (err) {
           return callback(err);
         }
-        callback(null, musics);
+        callback(null, news);
       });
     });
   });
 };
 
-Music.getByTime = function(callback) {
+News.prototype.getByTime = function(callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {
       return callback(err); //错误，返回 err 信息
     }
-    //读取 musics 集合
-    db.collection('musics', function(err, collection) {
+    //读取 news 集合
+    db.collection('news', function(err, collection) {
       if (err) {
         mongodb.close();
         return callback(err); //错误，返回 err 信息
@@ -171,26 +170,26 @@ Music.getByTime = function(callback) {
         limit: 12
       }).sort({
         time: -1
-      }).toArray(function(err, musics) {
+      }).toArray(function(err, news) {
         mongodb.close();
         if (err) {
           return callback(err);
         }
-        callback(null, musics);
+        callback(null, news);
       });
     });
   });
 };
 
 //更新一篇文章及其相关信息
-Music.addTimes = function(name, callback) {
+News.prototype.addTimes = function(name, callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {
       return callback(err);
     }
     //读取 posts 集合
-    db.collection('musics', function(err, collection) {
+    db.collection('news', function(err, collection) {
       if (err) {
         mongodb.close();
         return callback(err);
@@ -208,7 +207,7 @@ Music.addTimes = function(name, callback) {
           name: name
         }, {
           $set: {
-            times: news.times+1
+            times: news.times + 1
           }
         }, function(err) {
           mongodb.close();
