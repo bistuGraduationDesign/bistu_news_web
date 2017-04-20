@@ -1,23 +1,25 @@
 var mongodb = require('./db');
+var comment = require('./comment');
 
-function Music(music) {
-  this.name = music.name;
-  this.author = music.author;
-  this.type = music.type;
+function News(news) {
+  this.name = news.name;
+  this.time = news.time;
+  this.type = news.type;
+  this.comments=news.comments;
 };
 
-module.exports = Music;
+module.exports = News;
 
 //存储用户信息
-Music.prototype.save = function(callback) {
+News.prototype.save = function(callback) {
   var date = new Date(Date.now() + (8 * 60 * 60 * 1000));
 
-  var music = {
+  var news = {
     name: this.name, //音乐名
-    author: this.author, //音乐作者
     type: this.type, //音乐类型
-    times: 0, //音乐播放次数，用以统计热度
-    time: date //首次上传时间
+    commentCount: 0, //音乐播放次数，用以统计热度
+    time: this.time, //首次上传时间
+    comments:this.comments
   };
   //打开数据库
   mongodb.open(function(err, db) {
@@ -31,14 +33,14 @@ Music.prototype.save = function(callback) {
         return callback(err); //错误，返回 err 信息
       }
       //将用户数据插入 musics 集合
-      collection.insert(music, {
+      collection.insert(news, {
         safe: true
-      }, function(err, music) {
+      }, function(err, news) {
         mongodb.close();
         if (err) {
           return callback(err);
         }
-        callback(null, music.ops[0]); //成功！err 为 null，并返回存储后的用户文档
+        callback(null, news.ops[0]); //成功！err 为 null，并返回存储后的用户文档
       });
     });
   });
@@ -59,12 +61,12 @@ Music.getByName = function(name, callback) {
       //查找用户名（name键）值为 name 一个文档
       collection.findOne({
         name: name
-      }, function(error, music) {
+      }, function(error, news) {
         mongodb.close();
         if (err) {
           return callback(err);
         }
-        callback(null, music);
+        callback(null, news);
       });
     });
 
@@ -196,7 +198,7 @@ Music.addTimes = function(name, callback) {
 
       collection.findOne({
         name: name
-      }, function(err, music) {
+      }, function(err, news) {
         if (err) {
           mongodb.close();
           return callback(err);
@@ -206,7 +208,7 @@ Music.addTimes = function(name, callback) {
           name: name
         }, {
           $set: {
-            times: music.times+1
+            times: news.times+1
           }
         }, function(err) {
           mongodb.close();
