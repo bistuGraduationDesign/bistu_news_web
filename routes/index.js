@@ -175,9 +175,10 @@ module.exports = function(app) {
 
   // app.post('/upload-file', checkStatus.checkLogin);
   app.post("/upload-file", multipart(), function(req, res) {
+    console.log(req.files.file_data.type);
     async.waterfall([
       function(callback) {
-        Music.getByName(req.body.name, function(err, music) {
+        news.getByName(req.body.name, function(err, music) {
           if (music) {
             callback("歌曲已存在");
           } else if (err) {
@@ -188,49 +189,47 @@ module.exports = function(app) {
         })
       },
       function(callback) {
-        var fileData = req.files.file_data
-        if (fileData[0].type.indexOf("image") >= 0 && fileData[1].type.indexOf("audio") >= 0) {
-          upload.select(req, 0, 1, function(err) {
+        var fileData = req.files.file_data;
+          upload.select(req, 0, function(err) {
             if (err) {
               callback(err)
             } else {
               callback(null)
             }
-          })
-        } else if (fileData[1].type.indexOf("image") >= 0 && fileData[0].type.indexOf("audio") >= 0) {
-          upload.select(req, 1, 0, function(err) {
-            if (err) {
-              callback(err)
-            } else {
-              callback(null)
-            }
-          })
-        } else {
-          callback("请输入一个音频，mp3哦，一个图片，jepg哦，么么哒")
-        }
+          });
       },
       function(callback) {
         var type = 3;
         //摇滚1 民谣2 流行3
         switch (req.body.type) {
-          case "摇滚":
+          case "考研":
             type = 1;
             break;
-          case "民谣":
+          case "工作":
             type = 2;
             break;
-          case "流行":
+          case "留学":
             type = 3;
+            break;
+          case "校园活动":
+            type = 4;
+            break;
+          case "社会热点":
+            type = 5;
+            break;
+          case "爱豆":
+            type = 6;
             break;
         }
         //音乐名、作者、类型、次数
-        var newMusic = new Music({
+        var newNews = new news({
           name: req.body.name,
-          author: req.body.author,
+          time: req.body.date,
+          content: req.body.content,
           type: type
         });
         //如果不存在则新增用户
-        newMusic.save(function(err, music) {
+        newNews.save(function(err, music) {
           if (err) {
             callback("请重试");
           }

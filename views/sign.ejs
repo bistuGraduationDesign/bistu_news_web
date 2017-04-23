@@ -362,21 +362,11 @@ input {
     document.querySelector('.cont').classList.toggle('s--signup');
   });
   jQuery(document).ready(function($) {
-    //验证码
-      var buttonCcap = document.getElementById('ccap');
-      var change = 1;
-      buttonCcap.addEventListener('click', function() {
-        console.log("aaa");
-        change++;
-        var url = '/verificationCode/' + change;
-        buttonCcap.setAttribute('src', url);
-      }, false);
     //注册
       var buttonSignup = document.getElementById('signup');
       buttonSignup.addEventListener('click', function() {
         console.log("aaaa");
-        console.log(document.getElementById('ccapcode').value);
-        if(!(document.getElementById('name-up').value&&document.getElementById('email-up').value&&document.getElementById('password-up').value&&document.getElementById('ccapcode').value)){
+        if(!(document.getElementById('name-up').value&&document.getElementById('email-up').value&&document.getElementById('password-up').value)){
           toastr.error("输入全部信息", "失败", {
             "closeButton": true,
             "debug": false,
@@ -392,69 +382,20 @@ input {
             "hideMethod": "fadeOut"
           });
         }else{
-          $.ajax({
+            $.ajax({
             type: 'POST',
-            url: '/checkVerCode',
+            url: '/reg',
             data: {
-              verCode: document.getElementById('ccapcode').value
+              name: document.getElementById('name-up').value,
+              email: document.getElementById('email-up').value,
+              password: document.getElementById('password-up').value,
+              passwordrepeat:document.getElementById('password-up').value
             },
-            dataType: 'json',
-            success: function(res) {
-              console.log(res);
-              if (!!res.state) {
-                $.ajax({
-                type: 'POST',
-                url: '/reg',
-                data: {
-                  name: document.getElementById('name-up').value,
-                  email: document.getElementById('email-up').value,
-                  password: document.getElementById('password-up').value,
-                  passwordrepeat:document.getElementById('password-up').value
-                },
-                dataType: "json",
-                success: function(res1) {
-                  console.log(res1);
-                  console.log(res1);
-                  if (!!res1.state) {
-                    var opts = {
-                      "closeButton": true,
-                      "debug": false,
-                      "positionClass": "toast-top-full-width",
-                      "onclick": null,
-                      "showDuration": "300",
-                      "hideDuration": "1000",
-                      "timeOut": "5000",
-                      "extendedTimeOut": "1000",
-                      "showEasing": "swing",
-                      "hideEasing": "linear",
-                      "showMethod": "fadeIn",
-                      "hideMethod": "fadeOut"
-                    };
-                    toastr.success(res1.info, "成功", opts);
-                    setTimeout("window.location.href = '/' ",1000);
-                  }
-                  if (!res1.state) {
-                    var opts = {
-                      "closeButton": true,
-                      "debug": false,
-                      "positionClass": "toast-top-full-width",
-                      "onclick": null,
-                      "showDuration": "300",
-                      "hideDuration": "1000",
-                      "timeOut": "5000",
-                      "extendedTimeOut": "1000",
-                      "showEasing": "swing",
-                      "hideEasing": "linear",
-                      "showMethod": "fadeIn",
-                      "hideMethod": "fadeOut"
-                    };
-                    toastr.error(res1.info, "失败", opts);
-                  }
-
-                }
-              });
-              }
-              if (!res.state) {
+            dataType: "json",
+            success: function(res1) {
+              console.log(res1);
+              console.log(res1);
+              if (!!res1.state) {
                 var opts = {
                   "closeButton": true,
                   "debug": false,
@@ -469,9 +410,26 @@ input {
                   "showMethod": "fadeIn",
                   "hideMethod": "fadeOut"
                 };
-                toastr.error(res.info, "失败", opts);
+                toastr.success(res1.info, "成功", opts);
+                setTimeout("window.location.href = '/' ",1000);
               }
-
+              if (!res1.state) {
+                var opts = {
+                  "closeButton": true,
+                  "debug": false,
+                  "positionClass": "toast-top-full-width",
+                  "onclick": null,
+                  "showDuration": "300",
+                  "hideDuration": "1000",
+                  "timeOut": "5000",
+                  "extendedTimeOut": "1000",
+                  "showEasing": "swing",
+                  "hideEasing": "linear",
+                  "showMethod": "fadeIn",
+                  "hideMethod": "fadeOut"
+                };
+                toastr.error(res1.info, "失败", opts);
+              }
             }
           });
         }

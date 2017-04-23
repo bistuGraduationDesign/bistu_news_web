@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<!-- release v4.1.8, copyright 2014 - 2015 Kartik Visweswaran -->
+<html class="slate_gray">
+    <head>
+        <meta charset="UTF-8"/>
+        <title>upload</title>
+        <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <link rel='stylesheet' type='text/css' href='/css/bootstrap.min.css' >
+        <link href='/css/fileinput.min.css' media="all" rel="stylesheet" type="text/css" >
+        <link rel="stylesheet" type="text/css" href="/css/simditor.css" >
+        <script src="/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+        <script src="/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="/js/fileinput.js" type="text/javascript"></script>
+        <script src="/js/fileinput_locale_zh.js" type="text/javascript"></script>
+        <script type="text/javascript" src="/js/module.js"></script>
+        <script type="text/javascript" src="/js/hotkeys.js"></script>
+        <script type="text/javascript" src="/js/uploader.js"></script>
+        <script type="text/javascript" src="/js/simditor.js"></script>
+
+
+        <style>
+          .alert{
+            position: fixed;
+            width: 100%;
+            display: none;
+          }
+          .btn-primary{
+            background-color: #303d4a;
+            border-color:#303d4a;
+          }
+          #bt1{
+            margin-top: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+            float: right;
+          }
+          .header__top {
+              background: #303d4a;
+          }
+          .logo {
+              display: block;
+              background-image: url(../img/content/logo.png);
+              background-position: 0px 0px;
+              width: 180px;
+              height: 32px;
+              background-size: 180px, 138px;
+              background-repeat: no-repeat;
+          }
+          .wrap-logo {
+              padding-top: 18px;
+          }
+          .slate_gray {
+            background: #f4f7fa;
+          }
+        </style>
+    </head>
+    <body>
+      <header>
+        <div class="header__top">
+          <div class="container">
+            <div class="row" style="height:70px;">
+                <div class="col-sm-3">
+                    <div class="wrap-logo">
+                        <a href="/" class="logo"></a>
+                    </div>
+                </div>
+                <div class="col-sm-offset-2 col-md-offset-5 col-sm-6 col-md-4 hidden-xs">
+                    <div class="col-xs-4 col-sm-5"></div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <section class="slate_gray">
+        <div class="alert alert-success" role="alert" id='alertBox-success'>Success!</div>
+        <div class="alert alert-danger" role="alert" id='alertBox-danger'>Error!</div>
+        <div class="container kv-main" >
+              <h2>编辑新闻</h2>
+              <br>
+              <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                  <form id="news-info" >
+                      <div class="form-group">
+                          <h3>填写新闻信息</h3>
+                          <br>
+                          <div class="form-group">
+                            <label>新闻标题</label>
+                            <input type="text" class="form-control" id="text-1" name="name" placeholder="Name" required="required">
+                          </div>
+                          <div class="form-group">
+                            <label>新闻时间</label>
+                            <input type="date" class="form-control"  name="date"  required="required">
+                          </div>
+                          <div class="form-group">
+                            <label>新闻分类</label>
+                            <select class="form-control" name="type">
+                              <option>考研</option>
+                              <option>工作</option>
+                              <option>留学</option>
+                              <option>校园活动</option>
+                              <option>社会热点</option>
+                              <option>爱豆</option>
+                            </select>
+                          </div>
+                      </div>
+                  </form>
+                  <form enctype="multipart/form-data" method="POST" >
+                      <div class="form-group">
+                          <label>新闻封面</label>
+                          <input id="file-1" type="file" multiple class="file" data-overwrite-initial="false" required="required">
+                      </div>
+                  </form>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                    <div class="form-group">
+                      <h3>新闻内容</h3>
+                      <textarea id="editor" ></textarea>
+                    </div>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-xs-0 col-sm-0 col-md-10 col-lg-10"></div>
+                <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+                  <input id='bt1' type="button" class="btn btn-primary " value='上传' class="btn"></input>
+                </div>
+              </div>
+        </div>
+      </section>
+  <script>
+
+    function alertMsg(type,msg){
+      let state;
+      switch (type) {
+        case 'success':
+          state='成功'
+          break;
+        case 'danger':
+          state='错误'
+          break;
+      }
+      $('#alertBox-'+type).html(`<b>${state}!  </b>${msg}`).fadeIn('slow/400/fast').delay(2000).fadeOut('slow/400/fast');
+    }
+
+    function fileinputInit(id,url){
+      console.debug("fileinputInit")
+      $("#"+id).fileinput({
+          uploadUrl: url,
+          language: 'zh', //设置语言
+          //allowedFileExtensions : ['jpg', 'png','gif'],
+          //overwriteInitial: false,
+          showPreview:false,
+          uploadAsync: false,
+          maxFileSize: 5000,
+          maxFileCount: 1,
+          minFileCount: 1,
+          showUpload: false,
+          allowedFileTypes: ['image'],
+          uploadExtraData: function(previewId, index) {
+              return dataJson;
+          }
+    	});
+      $('#'+id).on('filebatchuploadsuccess',function(event,data){
+        console.debug(data);
+        alertMsg('success','新闻已上传。');
+        setTimeout("window.location.href = '/upload' ",1000);
+      });
+      $('#'+id).on('fileuploaderror', function(event) {
+        console.debug("fileerror...");
+        alertMsg('danger',"文件有误！");
+      });
+      $('#'+id).on('filebatchuploaderror', function(event, data, msg) {
+         console.debug(data.response.error);
+         alertMsg('danger',data.response.error);
+      });
+    }
+    var dataJson={};
+    fileinputInit("file-1","/upload-file");
+
+    $(document).ready(function() {
+      var Myeditor = new Simditor({
+        textarea: $('#editor'),
+        placeholder:'在此处编辑新闻',
+        toolbar:['title',
+                  'bold',
+                  'italic',
+                  'underline',
+                  'fontScale',
+                  'color',
+                  'ol',
+                  'ul',
+                  'link',
+                  'hr',
+                  'alignment']
+      });
+      $('#bt1').on('click',()=>{
+          let data=$("#news-info").serializeArray();
+          let haveNull=false;
+          data.map((e)=>{
+            dataJson[e.name]=e.value;
+            if(!e.value){
+              haveNull=true;
+            }
+          });
+          if(!Myeditor.getValue()){
+            haveNull=true;
+          }
+          dataJson.content=Myeditor.getValue();
+          console.debug(dataJson);
+          if(haveNull){
+            alertMsg('danger','请输入全部信息');
+          }else {
+          $('#file-1').fileinput('upload');
+          }
+      });
+    });
+	</script>
+  </body>
+</html>

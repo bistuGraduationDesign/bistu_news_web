@@ -1,5 +1,6 @@
 var mongodb = require('./db');
 
+
 function Comments(comment) {
 	this.news = comment.news
 	this.user = comment.user;
@@ -14,8 +15,8 @@ Comments.prototype.save = function(callback) {
 	var date = new Date(Date.now() + (8 * 60 * 60 * 1000));
 
 	var comments = {
-		news: this.news
-		user: this.user;
+		news: this.news,
+		user: this.user,
 		time: this.time, //首次上传时间
 		content: this.content
 	};

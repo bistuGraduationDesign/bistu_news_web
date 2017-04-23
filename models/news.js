@@ -4,6 +4,7 @@ function News(news) {
   this.name = news.name;
   this.time = news.time;
   this.type = news.type;
+  this.content=news.content;
 };
 
 module.exports = News;
@@ -16,7 +17,8 @@ News.prototype.save = function(callback) {
     name: this.name, //新闻名
     type: this.type, //新闻类型
     commentCount: 0, //新闻播放次数，用以统计热度
-    time: this.time //首次上传时间
+    time: this.time, //首次上传时间
+    content:this.content
   };
   //打开数据库
   mongodb.open(function(err, db) {
