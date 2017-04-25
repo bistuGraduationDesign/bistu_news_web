@@ -17,7 +17,7 @@ User.prototype.save = function(callback) {
     email: this.email, //用户邮箱
     password: this.password, //密码，md5加密后
     time: date, //注册时间
-    authority: this.authority
+    authority: 0 //0:普通用户、1:普通管理员、2:超级管理员
   };
   //打开数据库
   mongodb.open(function(err, db) {
@@ -69,3 +69,41 @@ User.get = function(name, callback) {
     });
   });
 };
+
+User.giveAdmain = function(name, callback) {
+  //打开数据库
+  mongodb.open(function(err, db) {
+    if (err) {
+      return callback(err);
+    }
+    db.collection('users', function(err, collection) {
+      if (err) {
+        mongodb.close();
+        return callback(err);
+      }
+
+      collection.findOne({
+        name: name
+      }, function(err, users) {
+        if (err) {
+          mongodb.close();
+          return callback(err);
+        }
+        //更新内容
+        collection.update({
+          name: name
+        }, {
+          $set: {
+            authority: 1//0:普通用户、1:普通管理员、2:超级管理员
+          }
+        }, function(err) {
+          mongodb.close();
+          if (err) {
+            return callback(err);
+          }
+          callback(null);
+        });
+      });
+    });
+  });
+}
