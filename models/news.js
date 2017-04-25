@@ -19,7 +19,7 @@ News.prototype.save = function(callback) {
     commentCount: 0, //新闻播放次数，用以统计热度
     time: this.time, //首次上传时间
     content: this.content,
-    pass: 0 //0:待审核，1：通过 2:未通过
+    pass: 0 //0:待审核，1：通过
   };
   //打开数据库
   mongodb.open(function(err, db) {
@@ -264,6 +264,35 @@ News.passOrNot = function(name, pass, callback) {
           callback(null);
         });
       });
+    });
+  });
+}
+
+News.delete = function(name, callback) {
+  //打开数据库
+  mongodb.open(function(err, db) {
+    if (err) {
+      return callback(err);
+    }
+    //读取 posts 集合
+    db.collection('news', function(err, collection) {
+      if (err) {
+        mongodb.close();
+        return callback(err);
+      }
+      collection.remove({
+        name: name
+      }, {
+        safe: true
+      }, function(err, result) {
+
+        if (err) {
+          mongodb.close();
+          return callback(err);
+        }
+        callback(null);
+      });
+
     });
   });
 }

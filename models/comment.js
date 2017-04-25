@@ -45,7 +45,7 @@ Comments.prototype.save = function(callback) {
 	});
 };
 
-Comments.getByName = function(name, callback) {
+Comments.getByNewsName = function(name, callback) {
 	//打开数据库
 	mongodb.open(function(err, db) {
 		if (err) {
@@ -72,3 +72,32 @@ Comments.getByName = function(name, callback) {
 		});
 	});
 };
+
+Comments.delete = function(id, callback) {
+  //打开数据库
+  mongodb.open(function(err, db) {
+    if (err) {
+      return callback(err);
+    }
+    //读取 posts 集合
+    db.collection('news', function(err, collection) {
+      if (err) {
+        mongodb.close();
+        return callback(err);
+      }
+      collection.remove({
+        _id: id
+      }, {
+        safe: true
+      }, function(err, result) {
+
+        if (err) {
+          mongodb.close();
+          return callback(err);
+        }
+        callback(null);
+      });
+
+    });
+  });
+}
