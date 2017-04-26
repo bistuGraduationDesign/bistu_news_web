@@ -131,7 +131,7 @@ News.getByType = function(type, callback) {
   });
 };
 
-News.prototype.getByHot = function(callback) {
+News.getByHot = function(callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {
@@ -175,7 +175,7 @@ News.getByTime = function(callback) {
       collection.find({
         pass: 1
       }, {
-        limit: 12
+        limit: 4
       }).sort({
         time: -1
       }).toArray(function(err, news) {

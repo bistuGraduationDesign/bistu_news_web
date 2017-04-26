@@ -14,7 +14,42 @@ module.exports = function(app) {
 
   //app.get('/', checkStatus.checkNotLogin);
   app.get("/", function(req, res) {
-    res.render("index", {});
+    var user = req.session.user?req.session.user:{null:true};
+    // an example using an object instead of an array
+    async.waterfall([
+      function(callback) {
+        news.getByHot(function(err, n) {
+          if (err) {
+            callback("请重试", null);
+          } else {
+            callback(null, n);
+          }
+        });
+      },
+      function( Hotnews, callback) {
+        news.getByTime(function(err, n) {
+          if (err) {
+            callback("请重试", null);
+          } else {
+            callback(null, Hotnews, n);
+          }
+        });
+      }
+    ], function(err, Hotnews, Timenews) {
+      if (err) {
+        var msg = {
+          state: false,
+          info: err
+        }; //注册失败返回主册页
+        return res.send(msg);
+      } else {
+        res.render("index", {
+          Hotnews: Hotnews,
+          Timenews: Timenews,
+          user: user
+        });
+      }
+    });
   });
 
   // app.get('/sign', checkStatus.checkNotLogin);
@@ -75,7 +110,8 @@ module.exports = function(app) {
     var newUser = new User({
       name: req.body.name,
       password: password,
-      email: req.body.email
+      email: req.body.email,
+      authority: 0
     });
 
     //检查用户名是否已经存在
@@ -96,7 +132,7 @@ module.exports = function(app) {
           }; //注册失败返回主册页
           return res.send(msg);
         }
-        // req.session.user = user; //用户信息存入 session
+        req.session.user = user; //用户信息存入 session
         var msg = {
           state: true,
           info: "sussess"
@@ -105,6 +141,11 @@ module.exports = function(app) {
       });
     });
   });
+
+  app.get("/category",function(req, res){
+    res.render("category",{});
+  });
+
 
   // app.get('/music', checkStatus.checkLogin);
   app.get("/music", function(req, res) {
@@ -170,6 +211,13 @@ module.exports = function(app) {
 
   // app.get('/upload', checkStatus.checkLogin);
   app.get("/upload", function(req, res) {
+    let user=req.session.user;
+    if(!user){
+      res.redirect('/');
+    }
+    if(user.authority!=1){
+      res.redirect('/');
+    }
     res.render("upload", {});
   });
 

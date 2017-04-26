@@ -35,10 +35,15 @@
                             </div>
                         </div>
                         <div class="col-sm-offset-2 col-md-offset-5 col-sm-6 col-md-4 hidden-xs">
-                            <div class="col-xs-4 col-sm-5"></div>
+                            <div class="col-xs-4 col-sm-5">
+                              <p class="userName"></p>
+                            </div>
                             <div class="col-xs-6 col-sm-7">
                                 <div class="sign">
                                     <a href="./sign"><span>sign</span></a>
+                                </div>
+                                <div class="logout" style="display:none">
+                                    <a href="./logout"><span>logout</span></a>
                                 </div>
                             </div>
                         </div>
@@ -70,31 +75,31 @@
 
                                 <li class="active">
                                     <span class="wsmenu-click"></span>
-                                    <a href="/index">Home</a>
+                                    <a href="/index">主页</a>
                                 </li>
                                 <li>
                                     <span class="wsmenu-click"></span>
-                                    <a href="category.html">Policy</a>
+                                    <a href="category?type=kaoyan">考研</a>
                                 </li>
                                 <li>
                                     <span class="wsmenu-click"></span>
-                                    <a href="category.html">Sport</a>
+                                    <a href="category?type=job">工作</a>
                                 </li>
                                 <li>
                                     <span class="wsmenu-click"></span>
-                                    <a href="category.html">Holidays</a>
+                                    <a href="category?type=studyabroad">留学</a>
                                 </li>
                                 <li>
                                     <span class="wsmenu-click"></span>
-                                    <a href="category.html">Religion</a>
+                                    <a href="category?type=campus">校园活动</a>
                                 </li>
                                 <li>
                                     <span class="wsmenu-click"></span>
-                                    <a href="category.html">People</a>
+                                    <a href="category?type=social">社会热点</a>
                                 </li>
                                 <li>
                                     <span class="wsmenu-click"></span>
-                                    <a href="category.html">Main</a>
+                                    <a href="category?type=aidou">爱豆</a>
                                 </li>
 
                                 <li class="navbar-right hidden-xs">
@@ -108,7 +113,6 @@
                                         </button>
                                     </form>
                                 </li>
-                                <li><a href="/sign">Sign</a></li>
                             </ul>
                         </nav>
                         <!--Menu HTML Code-->
@@ -203,7 +207,7 @@
             </div>
             <!-- END title -->
             <div class="wrap wrap_gray pt20">
-                <div class="container">
+                <div class="container" id="Hotnews">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="thumbnail thumbnail_big">
@@ -299,7 +303,6 @@
                                 </a>
                                 <div class="caption thumbnail__caption">
                                     <div class="news caption__news">
-                                        <i class="icon-play"></i>
                                         <p class="news__category yellow-line">People</p>
                                         <a href="news.html" class="news__link">
                                             <p class="news__text">NEWS: People began to love each other in large numbers online (Video)</p>
@@ -525,9 +528,40 @@
         </footer>
         <!-- END Footer -->
         <!-- All JavaScript libraries -->
+    <!--dataset javascript-->
+    <script type="text/javascript">
+      var dataset={
+        User:<%- JSON.stringify(user) %>,
+        Hotnews:<%- JSON.stringify(Hotnews) %>,
+        Timenews:<%- JSON.stringify(Timenews) %>,
+      };
+      console.debug(dataset);
+    </script>
 		<script src="js/jquery-3.1.1.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
 		<!-- Custom JavaScript -->
-        <script src="js/main.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        $(document).ready(function() {
+          user=dataset.User;
+          hotnews=dataset.Hotnews;
+          timenews=dataset.Timenews;
+          console.debug(user);
+          //if have userinfo change view
+          if(!user.null){
+            $(".sign").hide();
+            $(".logout").show();
+            $(".userName").text("hello,"+user.name);
+          }
+          /**
+          HotNews
+          */
+          var HotNewsNum=0;
+          var style;
+          console.debug(hotnews.length)
+          // if(hotnews.length)
+
+        });
+    </script>
     </body>
 </html>

@@ -335,19 +335,24 @@ a:hover{
 /* 2.4. END List City */
 
 /* 2.4.5 sign*/
-.sign{
+.sign,.logout{
   line-height: 70px;
   text-align: center;
 }
-.sign span{
+.sign span,.logout span{
   color: #fff;
   border: solid #fff 1px;
   border-radius: 3px;
   padding: 5% 10% 5% 10%;
 }
-.sign span:hover{
+.sign span:hover,.logout span:hover{
   background-color: #fff;
   color: rgb(78,78,78);
+}
+.userName{
+  color: #fff;
+  line-height: 70px;
+  float: right;
 }
 /* 2.4.5 END sign*/
 /* 2.5. Search */
