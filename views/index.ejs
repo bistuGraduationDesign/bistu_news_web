@@ -75,31 +75,31 @@
 
                                 <li class="active">
                                     <span class="wsmenu-click"></span>
-                                    <a href="/index">主页</a>
+                                    <a href="/">主页</a>
                                 </li>
                                 <li>
                                     <span class="wsmenu-click"></span>
-                                    <a href="category?type=kaoyan">考研</a>
+                                    <a href="category?type=1">考研</a>
                                 </li>
                                 <li>
                                     <span class="wsmenu-click"></span>
-                                    <a href="category?type=job">工作</a>
+                                    <a href="category?type=2">工作</a>
                                 </li>
                                 <li>
                                     <span class="wsmenu-click"></span>
-                                    <a href="category?type=studyabroad">留学</a>
+                                    <a href="category?type=3">留学</a>
                                 </li>
                                 <li>
                                     <span class="wsmenu-click"></span>
-                                    <a href="category?type=campus">校园活动</a>
+                                    <a href="category?type=4">校园活动</a>
                                 </li>
                                 <li>
                                     <span class="wsmenu-click"></span>
-                                    <a href="category?type=social">社会热点</a>
+                                    <a href="category?type=5">社会热点</a>
                                 </li>
                                 <li>
                                     <span class="wsmenu-click"></span>
-                                    <a href="category?type=aidou">爱豆</a>
+                                    <a href="category?type=6">爱豆</a>
                                 </li>
 
                                 <li class="navbar-right hidden-xs">
@@ -260,7 +260,7 @@
       var dataset={
         User:<%- JSON.stringify(user) %>,
         Hotnews:<%- JSON.stringify(Hotnews) %>,
-        Timenews:<%- JSON.stringify(Timenews) %>,
+        typelist:<%- JSON.stringify(typeList) %>
       };
 
     </script>
@@ -272,8 +272,6 @@
         $(document).ready(function() {
           user=dataset.User;
           hotnews=dataset.Hotnews;
-          timenews=dataset.Timenews;
-
           //if have userinfo change view
           if(!user.null){
             $(".sign").hide();
@@ -285,27 +283,7 @@
           */
           var HotNewsNum=0;
           function getType(typenum) {
-            switch (typenum) {
-              case 1:
-                type = "考研";
-                break;
-              case 2:
-                type = "工作";
-                break;
-              case 3:
-                type = "留学";
-                break;
-              case 4:
-                type = "校园活动";
-                break;
-              case 5:
-                type = "社会热点";
-                break;
-              case 6:
-                type = "爱豆";
-                break;
-            }
-            return type;s
+            return dataset.typelist[typenum-1];
           }
           function addSmallBlock(row,news) {
             $('#'+row).append(`

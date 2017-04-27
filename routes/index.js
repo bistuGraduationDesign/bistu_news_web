@@ -144,70 +144,38 @@ module.exports = function(app) {
   });
 
   app.get("/category",function(req, res){
-    res.render("category",{});
-  });
-
-
-  // app.get('/music', checkStatus.checkLogin);
-  app.get("/music", function(req, res) {
-    var user = req.session.user;
-    // an example using an object instead of an array
-    async.waterfall([
-      function(callback) {
-        var typeArray = user['type'];
-        var type;
-        if (typeArray[0] == typeArray[1]) {
-          type = typeArray[0];
-        } else {
-          type = typeArray[2];
+    let type=parseInt(req.query.type);
+    if(type<1||type>6){
+      res.render("404",{});
+    }else{
+      let user = req.session.user?req.session.user:{null:true};
+      async.waterfall([
+        function(callback) {
+          news.getByType(type,function(err, n) {
+            if (err) {
+              callback("请重试", null);
+            } else {
+              callback(null, n);
+            }
+          });
         }
-        Music.getByType(type, function(err, music) {
-          if (err) {
-            callback("请重试", null);
-          } else {
-            callback(null, music);
-          }
-        });
-      },
-      function(Typemusic, callback) {
-        Music.getByHot(function(err, music) {
-          if (err) {
-            callback("请重试", null);
-          } else {
-            callback(null, Typemusic, music);
-          }
-        });
-      },
-      function(Typemusic, Hotmusic, callback) {
-        Music.getByTime(function(err, music) {
-          if (err) {
-            callback("请重试", null);
-          } else {
-            callback(null, Typemusic, Hotmusic, music);
-          }
-        });
-      }
-    ], function(err, Typemusic, Hotmusic, Timemusic) {
-      // console.log("Typemusic:" + JSON.stringify(Typemusic));
-      // console.log("Hotmusic:" + JSON.stringify(Hotmusic));
-      // console.log("Timemusic:" + JSON.stringify(Timemusic));
-      if (err) {
-        var msg = {
-          state: false,
-          info: err
-        }; //注册失败返回主册页
-        return res.send(msg);
-      } else {
-        res.render("music", {
-          Typemusic: Typemusic,
-          Hotmusic: Hotmusic,
-          Timemusic: Timemusic,
-          user: user
-        });
-      }
-    });
-
-
+      ], function(err,Typenews) {
+        if (err) {
+          var msg = {
+            state: false,
+            info: err
+          }; //注册失败返回主册页
+          return res.send(msg);
+        } else {
+          res.render("category", {
+            Typenews: Typenews,
+            user: user,
+            typeList:["考研","工作","留学","校园活动","社会热点","爱豆"],
+            type:type
+          });
+        }
+      });
+    }
   });
 
   // app.get('/upload', checkStatus.checkLogin);
