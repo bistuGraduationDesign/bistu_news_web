@@ -148,7 +148,7 @@ News.getByHot = function(callback) {
       }, {
         limit: 13
       }).sort({
-        times: -1
+        commentCount: -1
       }).toArray(function(err, news) {
         mongodb.close();
         if (err) {
