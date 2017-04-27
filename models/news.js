@@ -215,7 +215,7 @@ News.addTimes = function(name, callback) {
           name: name
         }, {
           $set: {
-            times: news.times + 1
+            commentCount: news.commentCount + 1
           }
         }, function(err) {
           mongodb.close();

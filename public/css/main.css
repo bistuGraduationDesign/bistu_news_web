@@ -1699,6 +1699,12 @@ article .quote {
   text-transform: uppercase;
 }
 
+.current p{
+  text-align: left;
+  margin-bottom: 25px;
+  font-size: 1.3em;
+}
+
 .current__text {
   text-align: left;
   margin-bottom: 25px;

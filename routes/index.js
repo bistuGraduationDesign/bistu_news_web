@@ -209,7 +209,43 @@ module.exports = function(app) {
   });
 
   app.get("/news",function(req,res){
-    res.render("news",{});
+    let newsname=req.query.name;
+    let user = req.session.user?req.session.user:{null:true};
+    async.waterfall([
+      function(callback) {
+        news.getByName(newsname,1,function(err, n) {
+          if (err) {
+            callback("请重试", null);
+          } else {
+            callback(null, n);
+          }
+        });
+      }
+    ], function(err,thenews) {
+      if (err) {
+        var msg = {
+          state: false,
+          info: err
+        }; //注册失败返回主册页
+        return res.send(msg);
+      } else {
+        news.addTimes(newsname,function(err){
+          if (err) {
+          var msg = {
+            state: false,
+            info: err
+          };
+          return res.send(msg);
+        }else{
+          res.render("news", {
+            news: thenews,
+            user: user,
+            typeList:["考研","工作","留学","校园活动","社会热点","爱豆"]
+          });
+        }
+        });
+      }
+    });
   });
 
 
