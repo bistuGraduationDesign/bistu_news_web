@@ -146,7 +146,7 @@ News.getByHot = function(callback) {
       collection.find({
         pass: 1
       }, {
-        limit: 12
+        limit: 13
       }).sort({
         times: -1
       }).toArray(function(err, news) {

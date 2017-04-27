@@ -128,35 +128,35 @@
                     <!-- Tab panes -->
                     <div class="col-sm-8 tab-content tab-content_mob-p0">
                         <div role="tabpanel" class="tab-pane fade in active" id="home">
-                            <img src="img/content/slide1.jpg" alt="main img" class="tab-pane__img">
+                            <img src="updata/images/<%= Timenews[0].name%>.jpeg" alt="main img" class="tab-pane__img">
                             <div class="header_news_text tab-pane__block">
-                                <p class="tab-pane__category yel_line">People</p>
-                                <a class="tab-pane__title">The Visions's Rainbow</a>
-                                <p class="tab-pane__text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                <p class="tab-pane__category yel_line"><%=typeList[(Timenews[0].type-1)] %></p>
+                                <a class="tab-pane__title"><%= Timenews[0].name%></a>
+                                <p class="tab-pane__text"> </p>
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="profile">
-                            <img src="img/content/slide2.jpg" alt="main img" class="tab-pane__img">
+                            <img src="updata/images/<%= Timenews[1].name%>.jpeg" alt="main img" class="tab-pane__img">
                             <div class="header_news_text tab-pane__block">
-                                <p class="tab-pane__category yel_line">People</p>
-                                <a class="tab-pane__title">The Visions's Rainbow</a>
-                                <p class="tab-pane__text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                <p class="tab-pane__category yel_line"><%=typeList[(Timenews[1].type-1)] %></p>
+                                <a class="tab-pane__title"><%= Timenews[1].name%></a>
+                                <p class="tab-pane__text"> </p>
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="messages">
-                            <img src="img/content/slide1.jpg" alt="main img" class="tab-pane__img">
+                            <img src="updata/images/<%= Timenews[2].name%>.jpeg" alt="main img" class="tab-pane__img">
                             <div class="header_news_text tab-pane__block">
-                                <p class="tab-pane__category yel_line">People</p>
-                                <a class="tab-pane__title">The Visions's Rainbow</a>
-                                <p class="tab-pane__text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                <p class="tab-pane__category yel_line"><%=typeList[(Timenews[2].type-1)] %></p>
+                                <a class="tab-pane__title"><%= Timenews[2].name%></a>
+                                <p class="tab-pane__text"> </p>
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="settings">
-                            <img src="img/content/slide2.jpg" alt="main img" class="tab-pane__img">
+                            <img src="updata/images/<%= Timenews[3].name%>.jpeg" alt="main img" class="tab-pane__img">
                             <div class="header_news_text tab-pane__block">
-                                <p class="tab-pane__category yel_line">People</p>
-                                <a class="tab-pane__title">The Visions's Rainbow</a>
-                                <p class="tab-pane__text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                <p class="tab-pane__category yel_line"><%=typeList[(Timenews[3].type-1)] %></p>
+                                <a class="tab-pane__title"><%= Timenews[3].name%></a>
+                                <p class="tab-pane__text"> </p>
                             </div>
                         </div>
                     </div>
@@ -167,26 +167,26 @@
                         <ul class="news-tabs__nav nav nav-tabs shadow_text" role="tablist">
                             <li role="presentation" class="active">
                                 <a href="#home" role="tab" data-toggle="tab">
-                                    <span class="time">today, 10:11</span>
-                                    Volkswagen hit by multiple probes in US Volkswagen hit by multiple probes in US
+                                    <span class="time"><%=Timenews[0].time %></span>
+                                    <%=Timenews[0].name %>
                                 </a>
                             </li>
                             <li role="presentation">
                                 <a href="#profile" role="tab" data-toggle="tab">
-                                    <span class="time">today, 11:22</span>
-                                    Volkswagen hit by multiple probes in US Volkswagen hit by multiple probes in US
+                                    <span class="time"><%=Timenews[1].time %></span>
+                                    <%=Timenews[1].name %>
                                 </a>
                             </li>
                             <li role="presentation">
                                 <a href="#messages" role="tab" data-toggle="tab">
-                                    <span class="time">today, 12:33</span>
-                                    Volkswagen hit by multiple probes in US Volkswagen hit by multiple probes in US
+                                    <span class="time"><%=Timenews[2].time %></span>
+                                    <%=Timenews[2].name %>
                                 </a>
                             </li>
                             <li role="presentation">
                                 <a href="#settings" role="tab" data-toggle="tab">
-                                    <span class="time">today, 14:44</span>
-                                    Volkswagen hit by multiple probes in US Volkswagen hit by multiple probes in US
+                                    <span class="time"><%=Timenews[3].time %></span>
+                                    <%=Timenews[3].name %>
                                 </a>
                             </li>
                         </ul>
@@ -208,279 +208,6 @@
             <!-- END title -->
             <div class="wrap wrap_gray pt20">
                 <div class="container" id="Hotnews">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="thumbnail thumbnail_big">
-                                <img src="img/content/news1.jpg" height="350" width="560" alt="News">
-                                <div class="caption thumbnail__caption">
-                                    <div class="news caption__news">
-                                        <p class="news__category yellow-line">Economy</p>
-                                        <a href="#" class="news__head">The dollar has broken all records of positive change in the world and in the galaxy</a>
-                                        <p class="news__desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                    </div>
-                                    <div class="posted">
-                                        <span class="posted__date">today, 16:37</span>
-                                        <ul class="posted__icon">
-                                            <li>
-                                                <span>
-                                                <i class="icon-comment-empty"></i>29
-                                            </span>
-                                            </li>
-                                            <li>
-                                                <span>
-                                                <i class="icon-eye"></i>2.3k
-                                            </span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="thumbnail thumbnail_small">
-                                <a href="news.html" class="thumbnail__link">
-                                    <img src="img/content/news2.jpg" height="153" width="270" alt="News">
-                                </a>
-                                <div class="caption thumbnail__caption">
-                                    <div class="news caption__news">
-                                        <p class="news__category yellow-line">Economy</p>
-                                        <a href="news.html" class="news__link">
-                                            <p class="news__text">Еhe world's economy is improving and good times</p>
-                                        </a>
-                                    </div>
-                                    <div class="posted">
-                                        <span class="posted__date">today, 12:11</span>
-                                        <ul class="posted__icon">
-                                            <li>
-                                                <span>
-                                                <i class="icon-comment-empty"></i>11
-                                            </span>
-                                            </li>
-                                            <li>
-                                                <span>
-                                                <i class="icon-eye"></i>1.1k
-                                            </span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="thumbnail thumbnail_small">
-                                <a href="news.html" class="thumbnail__link">
-                                    <img src="img/content/news3.jpg" height="153" width="270" alt="News">
-                                </a>
-                                <div class="caption thumbnail__caption">
-                                    <div class="news caption__news">
-                                        <p class="news__category yellow-line">Economy</p>
-                                        <a href="news.html" class="news__link">
-                                            <p class="news__text">The euro needs to everyone in a large amount</p>
-                                        </a>
-                                    </div>
-                                    <div class="posted">
-                                        <span class="posted__date">today, 19:30</span>
-                                        <ul class="posted__icon">
-                                            <li>
-                                                <span>
-                                                <i class="icon-comment-empty"></i>294
-                                            </span>
-                                            </li>
-                                            <li>
-                                                <span>
-                                                <i class="icon-eye"></i>2.9k
-                                            </span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="thumbnail thumbnail_small">
-                                <a href="news.html" class="thumbnail__link">
-                                    <img src="img/content/news4.jpg" height="153" width="270" alt="News">
-                                </a>
-                                <div class="caption thumbnail__caption">
-                                    <div class="news caption__news">
-                                        <p class="news__category yellow-line">People</p>
-                                        <a href="news.html" class="news__link">
-                                            <p class="news__text">NEWS: People began to love each other in large numbers online (Video)</p>
-                                        </a>
-                                    </div>
-                                    <div class="posted">
-                                        <span class="posted__date">today, 2:39</span>
-                                        <ul class="posted__icon">
-                                            <li>
-                                                <span>
-                                                <i class="icon-comment-empty"></i>9
-                                            </span>
-                                            </li>
-                                            <li>
-                                                <span>
-                                                <i class="icon-eye"></i>1.3k
-                                            </span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="thumbnail thumbnail_small">
-                                <a href="news.html" class="thumbnail__link">
-                                    <img src="img/content/news5.jpg" height="153" width="270" alt="News">
-                                </a>
-                                <div class="caption thumbnail__caption">
-                                    <div class="news caption__news">
-                                        <p class="news__category yellow-line">Sport</p>
-                                        <a href="news.html" class="news__link">
-                                            <p class="news__text">Athletes are confident of victory in all competitions</p>
-                                        </a>
-                                    </div>
-                                    <div class="posted">
-                                        <span class="posted__date">today, 14:34</span>
-                                        <ul class="posted__icon">
-                                            <li>
-                                                <span>
-                                                <i class="icon-comment-empty"></i>58
-                                            </span>
-                                            </li>
-                                            <li>
-                                                <span>
-                                                <i class="icon-eye"></i>8.8k
-                                            </span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <div class="thumbnail thumbnail_small">
-                                <a href="news.html" class="thumbnail__link">
-                                    <img src="img/content/news6.jpg" height="153" width="270" alt="News">
-                                </a>
-                                <div class="caption thumbnail__caption">
-                                    <div class="news caption__news">
-                                        <i class="icon-play"></i>
-                                        <p class="news__category yellow-line">People</p>
-                                        <a href="news.html" class="news__link">
-                                            <p class="news__text">All the people of the world love each other and say hello</p>
-                                        </a>
-                                    </div>
-                                    <div class="posted">
-                                        <span class="posted__date">today, 12:37</span>
-                                        <ul class="posted__icon">
-                                            <li>
-                                                <span>
-                                                <i class="icon-comment-empty"></i>20
-                                            </span>
-                                            </li>
-                                            <li>
-                                                <span>
-                                                <i class="icon-eye"></i>1.2k
-                                            </span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="thumbnail thumbnail_small">
-                                <a href="news.html" class="thumbnail__link">
-                                    <img src="img/content/news7.jpg" height="153" width="270" alt="News">
-                                </a>
-                                <div class="caption thumbnail__caption">
-                                    <div class="news caption__news">
-                                        <p class="news__category yellow-line">Economy</p>
-                                        <a href="news.html" class="news__link">
-                                            <p class="news__text">Attention: The poor become rich, rich richer</p>
-                                        </a>
-                                    </div>
-                                    <div class="posted">
-                                        <span class="posted__date">today, 11:30</span>
-                                        <ul class="posted__icon">
-                                            <li>
-                                                <span>
-                                                <i class="icon-comment-empty"></i>21
-                                            </span>
-                                            </li>
-                                            <li>
-                                                <span>
-                                                <i class="icon-eye"></i>1.9k
-                                            </span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="thumbnail thumbnail_small">
-                                <a href="news.html" class="thumbnail__link">
-                                    <img src="img/content/news8.jpg" height="153" width="270" alt="News">
-                                </a>
-                                <div class="caption thumbnail__caption">
-                                    <div class="news caption__news">
-                                        <i class="icon-play"></i>
-                                        <p class="news__category yellow-line">Sport</p>
-                                        <a href="news.html" class="news__link">
-                                            <p class="news__text">The winners of sports games already online (Video)</p>
-                                        </a>
-                                    </div>
-                                    <div class="posted">
-                                        <span class="posted__date">today, 10:36</span>
-                                        <ul class="posted__icon">
-                                            <li>
-                                                <span>
-                                                <i class="icon-comment-empty"></i>17
-                                            </span>
-                                            </li>
-                                            <li>
-                                                <span>
-                                                <i class="icon-eye"></i>2.0k
-                                            </span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="thumbnail thumbnail_small">
-                                <a href="news.html" class="thumbnail__link">
-                                    <img src="img/content/news9.jpg" height="153" width="270" alt="News">
-                                </a>
-                                <div class="caption thumbnail__caption">
-                                    <div class="news caption__news">
-                                        <p class="news__category yellow-line">Business</p>
-                                        <a href="news.html" class="news__link">
-                                            <p class="news__text">The best exchange rates and motivation for you</p>
-                                        </a>
-                                    </div>
-                                    <div class="posted">
-                                        <span class="posted__date">today, 12:30</span>
-                                        <ul class="posted__icon">
-                                            <li>
-                                                <span>
-                                                <i class="icon-comment-empty"></i>29
-                                            </span>
-                                            </li>
-                                            <li>
-                                                <span>
-                                                <i class="icon-eye"></i>2.3k
-                                            </span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <!-- btn load-->
                 <div class="ajax_load">
@@ -535,7 +262,7 @@
         Hotnews:<%- JSON.stringify(Hotnews) %>,
         Timenews:<%- JSON.stringify(Timenews) %>,
       };
-      console.debug(dataset);
+
     </script>
 		<script src="js/jquery-3.1.1.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
@@ -546,7 +273,7 @@
           user=dataset.User;
           hotnews=dataset.Hotnews;
           timenews=dataset.Timenews;
-          console.debug(user);
+
           //if have userinfo change view
           if(!user.null){
             $(".sign").hide();
@@ -557,10 +284,105 @@
           HotNews
           */
           var HotNewsNum=0;
-          var style;
-          console.debug(hotnews.length)
-          // if(hotnews.length)
+          function getType(typenum) {
+            switch (typenum) {
+              case 1:
+                type = "考研";
+                break;
+              case 2:
+                type = "工作";
+                break;
+              case 3:
+                type = "留学";
+                break;
+              case 4:
+                type = "校园活动";
+                break;
+              case 5:
+                type = "社会热点";
+                break;
+              case 6:
+                type = "爱豆";
+                break;
+            }
+            return type;s
+          }
+          function addSmallBlock(row,news) {
+            $('#'+row).append(`
+              <div class="col-sm-3">
+                  <div class="thumbnail thumbnail_small">
+                      <a href="/news?name=${news.name}" class="thumbnail__link">
+                          <div style="width:270px;height:151px;">
+                          <img src="updata/images/${news.name}.jpeg" height="180" width="270" alt="News">
+                          </div>
+                      </a>
+                      <div class="caption thumbnail__caption">
+                          <div class="news caption__news">
+                              <p class="news__category yellow-line">${getType(news.type)}</p>
+                              <a href="/news?name=${news.name}" class="news__link">
+                                  <p class="news__text">${news.name}</p>
+                              </a>
+                          </div>
+                          <div class="posted">
+                              <span class="posted__date">${news.time}</span>
+                              <ul class="posted__icon">
+                                  <li>
+                                      <span>
+                                      <i class="icon-eye"></i>${news.commentCount}
+                                  </span>
+                                  </li>
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+              </div>`);
+          }
+          //add content
+          $('#Hotnews').append("<div class='row' id='row1'></div>");
+          $('#row1').append(`
+            <div class="col-sm-6">
+              <div class="thumbnail thumbnail_big">
+                  <div >
+                  <img src="updata/images/${hotnews[0].name}.jpeg" height="350" width="563" alt="News">
+                  <div class="caption thumbnail__caption" style="height:256px;">
+                      <div class="news caption__news" style="height:186px">
+                          <p class="news__category yellow-line">${getType(hotnews[0].type)}</p>
+                          <a href="/news?name=${hotnews[0].name}" class="news__head">${hotnews[0].name}</a>
+                          <p class="news__desc">${hotnews[0].name}${hotnews[0].name}</p>
+                      </div>
+                      <div class="posted">
+                          <span class="posted__date">${hotnews[0].time}</span>
+                          <ul class="posted__icon">
+                              <li>
+                                  <span>
+                                  <i class="icon-eye"></i>${hotnews[0].commentCount}
+                              </span>
+                              </li>
+                          </ul>
+                      </div>
+                  </div>
+              </div>
+          </div>`);
+          HotNewsNum++;
+          for(var i=1;i<5;i++){
+              addSmallBlock("row1",hotnews[i]);
+              HotNewsNum++;
+              if(HotNewsNum==hotnews.length){
+                break;
+              }
+          }
+          var rowNum=1;
 
+          while (HotNewsNum<hotnews.length) {
+            $('#Hotnews').append(`<div class='row' id='row${++rowNum}'></div>`);
+            for(var i=0;i<4;i++){
+                addSmallBlock("row"+rowNum,hotnews[HotNewsNum+i]);
+                HotNewsNum++;
+                if(HotNewsNum==hotnews.length){
+                  break;
+                }
+            }
+          }
         });
     </script>
     </body>

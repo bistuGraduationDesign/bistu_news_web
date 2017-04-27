@@ -46,7 +46,8 @@ module.exports = function(app) {
         res.render("index", {
           Hotnews: Hotnews,
           Timenews: Timenews,
-          user: user
+          user: user,
+          typeList:["考研","工作","留学","校园活动","社会热点","爱豆"]
         });
       }
     });
@@ -226,7 +227,7 @@ module.exports = function(app) {
     console.log(req.files.file_data.type);
     async.waterfall([
       function(callback) {
-        news.getByName(req.body.name, function(err, music) {
+        news.getByName(req.body.name,0,function(err, music) {
           if (music) {
             callback("歌曲已存在");
           } else if (err) {
