@@ -1,0 +1,253 @@
+﻿<!DOCTYPE html>
+<html lang="zxx">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta content="" name="description">
+        <meta content="" name="keywords">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="HandheldFriendly" content="true">
+        <meta content="telephone=no" name="format-detection">
+        <!-- favicon -->
+        <!-- <link rel="shortcut icon" type="image/png" href="favicon.png" /> -->
+        <!--[if (gt IE 9)|!(IE)]><!-->
+        <!-- custom CSS -->
+        <link href="css/main.css" rel="stylesheet" type="text/css" />
+        <!-- END custom CSS -->
+        <!--<![endif]-->
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+            <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <title></title>
+    </head>
+    <body class="page">
+        <div class="wrapper-sticky-footer">
+            <div class="content-sticky">
+              <!-- Header -->
+              <header id="header" class="header">
+                  <div class="header__top">
+                      <div class="container">
+                          <div class="row" style="height:70px;">
+                              <div class="col-sm-3">
+                                  <div class="wrap-logo">
+                                      <a href="index.html" class="logo"></a>
+                                  </div>
+                              </div>
+                              <div class="col-sm-offset-2 col-md-offset-5 col-sm-6 col-md-4 hidden-xs">
+                                  <div class="col-xs-4 col-sm-5">
+                                    <p class="userName"></p>
+                                  </div>
+                                  <div class="col-xs-6 col-sm-7">
+                                      <div class="sign">
+                                          <a href="./sign"><span>sign</span></a>
+                                      </div>
+                                      <div class="logout" style="display:none">
+                                          <a href="./logout"><span>logout</span></a>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="wsmenucontent overlapblackbg"></div>
+                  <div class="wsmenuexpandermain slideRight">
+                      <a id="navToggle" class="animated-arrow slideLeft">
+                          <span></span>
+                      </a>
+                  </div>
+                  <div class="header_down">
+                      <div class="container">
+                          <div class="wrapper clearfix bigmegamenu">
+                              <!--Main Menu HTML Code-->
+                              <nav class="wsmenu slideLeft clearfix">
+                                  <ul class="mobile-sub wsmenu-list">
+                                      <li class="visible-xs">
+                                          <form class="navbar-form mob_search" role="search">
+                                              <div class="form-group">
+                                                  <input type="text" class="form-control" placeholder="Search">
+                                              </div>
+                                              <button type="submit" class="btn btn-search">
+                                                  <i class="icon-search"></i>
+                                              </button>
+                                          </form>
+                                      </li>
+
+                                      <li class="active">
+                                          <span class="wsmenu-click"></span>
+                                          <a href="/">主页</a>
+                                      </li>
+                                      <li>
+                                          <span class="wsmenu-click"></span>
+                                          <a href="category?type=1">考研</a>
+                                      </li>
+                                      <li>
+                                          <span class="wsmenu-click"></span>
+                                          <a href="category?type=2">工作</a>
+                                      </li>
+                                      <li>
+                                          <span class="wsmenu-click"></span>
+                                          <a href="category?type=3">留学</a>
+                                      </li>
+                                      <li>
+                                          <span class="wsmenu-click"></span>
+                                          <a href="category?type=4">校园活动</a>
+                                      </li>
+                                      <li>
+                                          <span class="wsmenu-click"></span>
+                                          <a href="category?type=5">社会热点</a>
+                                      </li>
+                                      <li>
+                                          <span class="wsmenu-click"></span>
+                                          <a href="category?type=6">爱豆</a>
+                                      </li>
+
+                                      <li class="navbar-right hidden-xs">
+                                          <form class="navbar-form" role="search" action="/search" method="get">
+                                              <div class="form-group">
+                                                  <input type="text" class="form-control" placeholder="Search" name="search">
+                                              </div>
+                                              <button type="submit" class="btn btn-search">
+                                                  <i class="icon-search"></i>
+                                                  <br/>Search
+                                              </button>
+                                          </form>
+                                      </li>
+                                  </ul>
+                              </nav>
+                              <!--Menu HTML Code-->
+                          </div>
+                      </div>
+                  </div>
+              </header>
+              <!-- END header -->
+                <!-- content-->
+                <div class="wrap wrap_gray pt20">
+                    <div class="container" id="news">
+
+                    </div>
+                    <div class="ajax_load">
+                        <i class="icon-arrows-cw"></i>Load more
+                        <svg width="128" height="40" viewBox="0 0 128 40" xmlns="http://www.w3.org/2000/svg">
+                            <rect x='0' y='0' fill='none' width='128' height='40'></rect>
+                        </svg>
+                    </div>
+                </div>
+                <!-- END content-->
+            </div>
+            <!-- Footer -->
+            <footer class="footer slate_gray">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <p class="copyright">Copyright &copy; 2017.Company name All rights reserved.</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="social navbar-right">
+                                <p class="social__text">We are in social networks</p>
+                                <ul class="social__list">
+                                    <li class="social__item">
+                                        <a class="facebook" href="#">
+                                            <i class="icon-facebook"></i>
+                                        </a>
+                                    </li>
+                                    <li class="social__item">
+                                        <a class="twitter" href="#">
+                                            <i class="icon-twitter"></i>
+                                        </a>
+                                    </li>
+                                    <li class="social__item">
+                                        <a class="gplus" href="#">
+                                            <i class="icon-gplus"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <!-- END Footer -->
+        <!-- All JavaScript libraries -->
+    <script>
+    var dataset={
+      User:<%- JSON.stringify(user) %>,
+      news:<%- JSON.stringify(news) %>,
+      typelist:<%- JSON.stringify(typeList) %>
+    };
+    </script>
+		<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<!-- Custom JavaScript -->
+    <script src="js/main.js"></script>
+      <script type="text/javascript">
+      $(document).ready(function() {
+        user=dataset.User;
+        news=dataset.news;
+        //if have userinfo change view
+        if(!user.null){
+          $(".sign").hide();
+          $(".logout").show();
+          $(".userName").text("hello,"+user.name);
+        }
+        /**
+        TypeNews
+        */
+        var newsNum=0;
+        function getType(typenum) {
+          return dataset.typelist[typenum-1];
+        }
+        function addSmallBlock(row,news) {
+          console.debug("addSmallBlock...");
+          $('#'+row).append(`
+            <div class="col-sm-3">
+                <div class="thumbnail thumbnail_small">
+                    <a href="/news?name=${news.name}" class="thumbnail__link">
+                        <div style="width:270px;height:151px;">
+                        <img src="updata/images/${news.name}.jpeg" height="180" width="270" alt="News">
+                        </div>
+                    </a>
+                    <div class="caption thumbnail__caption">
+                        <div class="news caption__news">
+                            <p class="news__category yellow-line">${getType(news.type)}</p>
+                            <a href="/news?name=${news.name}" class="news__link">
+                                <p class="news__text">${news.name}</p>
+                            </a>
+                        </div>
+                        <div class="posted">
+                            <span class="posted__date">${news.time}</span>
+                            <ul class="posted__icon">
+                                <li>
+                                    <span>
+                                    <i class="icon-eye"></i>${news.commentCount}
+                                </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>`);
+        }
+        //add content
+        var rowNum=0;
+
+        while (newsNum<news.length) {
+          $('#news').append(`<div class='row' id='row${++rowNum}'></div>`);
+          for(var i=0;i<4;i++){
+              addSmallBlock("row"+rowNum,news[newsNum]);
+              newsNum++;
+              console.debug(news);
+              console.debug(news.length);
+              if(newsNum==news.length){
+                console.debug(newsNum);
+                break;
+              }
+          }
+        }
+      });
+      </script>
+    </body>
+</html>

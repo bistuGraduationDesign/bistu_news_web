@@ -103,9 +103,9 @@
                                 </li>
 
                                 <li class="navbar-right hidden-xs">
-                                    <form class="navbar-form" role="search">
+                                    <form class="navbar-form" role="search" action="/search" method="get">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" placeholder="Search">
+                                            <input type="text" class="form-control" placeholder="Search" name="search">
                                         </div>
                                         <button type="submit" class="btn btn-search">
                                             <i class="icon-search"></i>
@@ -354,7 +354,7 @@
           while (HotNewsNum<hotnews.length) {
             $('#Hotnews').append(`<div class='row' id='row${++rowNum}'></div>`);
             for(var i=0;i<4;i++){
-                addSmallBlock("row"+rowNum,hotnews[HotNewsNum+i]);
+                addSmallBlock("row"+rowNum,hotnews[HotNewsNum]);
                 HotNewsNum++;
                 if(HotNewsNum==hotnews.length){
                   break;

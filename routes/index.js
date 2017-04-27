@@ -178,6 +178,41 @@ module.exports = function(app) {
     }
   });
 
+  app.get("/search",function(req,res){
+    let key=req.query.search;
+    let user = req.session.user?req.session.user:{null:true};
+    async.waterfall([
+      function(callback) {
+        news.getByName_more(key,1,function(err, n) {
+          if (err) {
+            callback("请重试", null);
+          } else {
+            callback(null, n);
+          }
+        });
+      }
+    ], function(err,news) {
+      if (err) {
+        var msg = {
+          state: false,
+          info: err
+        }; //注册失败返回主册页
+        return res.send(msg);
+      } else {
+        res.render("search-result", {
+          news: news,
+          user: user,
+          typeList:["考研","工作","留学","校园活动","社会热点","爱豆"]
+        });
+      }
+    });
+  });
+
+  app.get("/news",function(req,res){
+    res.render("news",{});
+  });
+
+
   // app.get('/upload', checkStatus.checkLogin);
   app.get("/upload", function(req, res) {
     let user=req.session.user;
