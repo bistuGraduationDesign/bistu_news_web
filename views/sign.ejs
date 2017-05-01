@@ -361,7 +361,28 @@ input {
   document.querySelector('.img__btn').addEventListener('click', function() {
     document.querySelector('.cont').classList.toggle('s--signup');
   });
+
+
   jQuery(document).ready(function($) {
+    //回车事件
+    function keyDown(e,signin) {
+      var ev= window.event||e;
+
+    //13是键盘上面固定的回车键
+      if (ev.keyCode == 13) {
+        if(signin){
+          $('#signin').trigger('click');
+        }else {
+          $('#signup').trigger('click');
+        }
+      }
+     }
+    $('.sign-in input').on('keydown', function(event) {
+      keyDown(event,true);
+    });
+    $('.sign-up input').on('keydown', function(event) {
+      keyDown(event,false);
+    });
     //注册
       var buttonSignup = document.getElementById('signup');
       buttonSignup.addEventListener('click', function() {
