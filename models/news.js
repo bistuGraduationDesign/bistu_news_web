@@ -288,9 +288,8 @@ News.delete = function(name, callback) {
       }, {
         safe: true
       }, function(err, result) {
-
+        mongodb.close();
         if (err) {
-          mongodb.close();
           return callback(err);
         }
         callback(null);

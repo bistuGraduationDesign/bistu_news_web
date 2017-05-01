@@ -129,8 +129,22 @@
                         <img src="img/content/article.jpg" alt="img" class="wrap-headline__img">
                         <div class="headline clearfix">
                             <div class="headline__data">
-                                <a href="category.html" class="headline__category headline__category_orange"><%=typeList[(news.type-1)] %></a>
-                                <p class="headline__category"><%=news.time %></p>
+                                <a data-toggle="modal" href="#myModal" class="headline__category headline__category_red" style="display:none">删除</a>
+                                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-body">
+                                        <p>确认删除？</p>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                        <button type="button" class="btn btn-primary" id="delete">确认</button>
+                                      </div>
+                                    </div><!-- /.modal-content -->
+                                  </div><!-- /.modal-dialog -->
+                                </div><
+                                <a href="/category?type=<%=news.type%>" class="headline__category headline__category_orange"><%=typeList[(news.type-1)] %></a>
+                                <p class="headline__category"></p>
                             </div>
                         </div>
                     </div>
@@ -241,12 +255,46 @@
             $(".sign").hide();
             $(".logout").show();
             $(".userName").text("hello,"+user.name);
+            if(user.authority==1){
+              $(".headline__category_red").show();
+              $("#delete").on('click', function(event) {
+                if(!$("#delete").hasClass("disabled")){
+                  $("#delete").text('删除中...').addClass('disabled');
+                  $.ajax({
+                    url: '/delete',
+                    type: 'POST',
+                    data: {name: news.name}
+                  })
+                  .done(function(res) {
+                    console.log("success");
+                    if(res.state){
+                      $("#delete").text('已删除');
+                    }
+                    $(".modal-body").text(res.info);
+                    location.href = "/";
+                  })
+                  .fail(function() {
+                    console.log("error");
+                  })
+                  .always(function() {
+                    console.log("complete");
+                  });
+
+                }
+              });
+            }
+          }
+          function deletenews(){
+            alert(1);
           }
           //news render
           $(".current").append(`
             <h1 class="text-center yel_line current__title">${news.name}</h1>
             <img src="updata/images/${news.name}.jpeg" alt="img" class="current__img">
             ${news.content}`);
+          $('p.headline__category').append(news.time.substring(0,10));
+
+
         });
     </script>
     </body>

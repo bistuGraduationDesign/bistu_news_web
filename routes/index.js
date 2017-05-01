@@ -339,43 +339,32 @@ module.exports = function(app) {
     });
   });
 
-  // app.post('/play', checkStatus.checkLogin);
-  app.post("/play", function(req, res) {
-
-    async.waterfall([
-      function(callback) {
-        Music.addTimes(req.body.name, function(err) {
-          if (err) {
-            callback(err);
-          } else {
-            callback(null);
-          }
-        });
-      },
-      function(callback) {
-        User.changeType(req.session.user, req.body.type, function(err) {
-          if (err) {
-            callback(err);
-          } else {
-            callback(null);
-          }
-        })
-      }
-    ], function(err, result) {
-      if (err) {
-        var msg = {
-          state: false,
-          info: err
-        };
-      } else {
-        var msg = {
-          state: true,
-          info: "sussess"
-        };
-      }
+  app.post('/delete', function(req, res) {
+    let user=req.session.user;
+    if(!user||user.authority!=1){
+      var msg = {
+        state: false,
+        info: "没有权限!!!"
+      };
       return res.send(msg);
-    });
-
+    }else{
+      var dename=req.body.name;
+      news.delete(dename,function(err){
+        if(err){
+          var msg = {
+            state: false,
+            info: "error"
+          };
+          return res.send(msg);
+        }else{
+          var msg = {
+            state: true,
+            info: "已删除该新闻！"
+          };
+          return res.send(msg);
+        }
+      })
+    }
   });
 
   // app.post('/getByName', checkStatus.checkLogin);

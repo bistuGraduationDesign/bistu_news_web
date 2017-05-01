@@ -1077,6 +1077,20 @@ a.special__link:focus {
   background-color: #f3b803;
 }
 
+.headline__category_red {
+  background-color: #d9534f;
+  -webkit-transition: background .25s ease;
+  transition: background .25s ease;
+  text-transform: uppercase;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.headline__category_red:hover {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #c9302c;
+}
 .share {
   float: right;
 }
