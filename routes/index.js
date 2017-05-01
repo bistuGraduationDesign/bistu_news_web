@@ -254,11 +254,11 @@ module.exports = function(app) {
     let user=req.session.user;
     if(!user){
       res.redirect('/');
-    }
-    if(user.authority!=1){
+    }else if (user.authority!=1){
       res.redirect('/');
-    }
-    res.render("upload", {});
+    }else(
+      res.render("upload", {})
+    )
   });
 
   // app.post('/upload-file', checkStatus.checkLogin);

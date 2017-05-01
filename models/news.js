@@ -11,13 +11,16 @@ module.exports = News;
 
 //存储新闻信息
 News.prototype.save = function(callback) {
-  var date = new Date(Date.now() + (8 * 60 * 60 * 1000));
-
+  let timeStr=this.time;
+  let timeArr=new Array(3);
+  timeArr=timeStr.split('-');
+  var time=new Date(timeArr[0],timeArr[1]-1,timeArr[2]);
+  console.log(time);
   var news = {
     name: this.name, //新闻名
     type: this.type, //新闻类型
     commentCount: 0, //新闻播放次数，用以统计热度
-    time: this.time, //首次上传时间
+    time: time, //首次上传时间
     content: this.content,
     pass: 0 //0:待审核，1：通过
   };

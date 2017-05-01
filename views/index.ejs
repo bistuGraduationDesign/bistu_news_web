@@ -130,7 +130,7 @@
                         <div role="tabpanel" class="tab-pane fade in active" id="home">
                             <img src="updata/images/<%= Timenews[0].name%>.jpeg" alt="main img" class="tab-pane__img">
                             <div class="header_news_text tab-pane__block">
-                                <p class="tab-pane__category yel_line"><%=typeList[(Timenews[0].type-1)] %></p>
+                                <p class="tab-pane__category yel_line"></p>
                                 <a class="tab-pane__title" href="/news?name=<%= Timenews[0].name%>" ><%= Timenews[0].name%></a>
                                 <p class="tab-pane__text"> </p>
                             </div>
@@ -138,7 +138,7 @@
                         <div role="tabpanel" class="tab-pane fade" id="profile">
                             <img src="updata/images/<%= Timenews[1].name%>.jpeg" alt="main img" class="tab-pane__img">
                             <div class="header_news_text tab-pane__block">
-                                <p class="tab-pane__category yel_line"><%=typeList[(Timenews[1].type-1)] %></p>
+                                <p class="tab-pane__category yel_line"></p>
                                 <a class="tab-pane__title" href="/news?name=<%= Timenews[1].name%>"><%= Timenews[1].name%></a>
                                 <p class="tab-pane__text"> </p>
                             </div>
@@ -146,7 +146,7 @@
                         <div role="tabpanel" class="tab-pane fade" id="messages">
                             <img src="updata/images/<%= Timenews[2].name%>.jpeg" alt="main img" class="tab-pane__img">
                             <div class="header_news_text tab-pane__block">
-                                <p class="tab-pane__category yel_line"><%=typeList[(Timenews[2].type-1)] %></p>
+                                <p class="tab-pane__category yel_line"></p>
                                 <a class="tab-pane__title" href="/news?name=<%= Timenews[2].name%>"><%= Timenews[2].name%></a>
                                 <p class="tab-pane__text"> </p>
                             </div>
@@ -154,7 +154,7 @@
                         <div role="tabpanel" class="tab-pane fade" id="settings">
                             <img src="updata/images/<%= Timenews[3].name%>.jpeg" alt="main img" class="tab-pane__img">
                             <div class="header_news_text tab-pane__block">
-                                <p class="tab-pane__category yel_line"><%=typeList[(Timenews[3].type-1)] %></p>
+                                <p class="tab-pane__category yel_line"></p>
                                 <a class="tab-pane__title" href="/news?name=<%= Timenews[3].name%>"><%= Timenews[3].name%></a>
                                 <p class="tab-pane__text"> </p>
                             </div>
@@ -167,25 +167,25 @@
                         <ul class="news-tabs__nav nav nav-tabs shadow_text" role="tablist">
                             <li role="presentation" class="active">
                                 <a href="#home" role="tab" data-toggle="tab">
-                                    <span class="time"><%=Timenews[0].time %></span>
+                                    <span class="time"></span>
                                     <%=Timenews[0].name %>
                                 </a>
                             </li>
                             <li role="presentation">
                                 <a href="#profile" role="tab" data-toggle="tab">
-                                    <span class="time"><%=Timenews[1].time %></span>
+                                    <span class="time"></span>
                                     <%=Timenews[1].name %>
                                 </a>
                             </li>
                             <li role="presentation">
                                 <a href="#messages" role="tab" data-toggle="tab">
-                                    <span class="time"><%=Timenews[2].time %></span>
+                                    <span class="time"></span>
                                     <%=Timenews[2].name %>
                                 </a>
                             </li>
                             <li role="presentation">
                                 <a href="#settings" role="tab" data-toggle="tab">
-                                    <span class="time"><%=Timenews[3].time %></span>
+                                    <span class="time"></span>
                                     <%=Timenews[3].name %>
                                 </a>
                             </li>
@@ -259,6 +259,7 @@
     <script type="text/javascript">
       var dataset={
         User:<%- JSON.stringify(user) %>,
+        Timenews:<%- JSON.stringify(Timenews)%>,
         Hotnews:<%- JSON.stringify(Hotnews) %>,
         typelist:<%- JSON.stringify(typeList) %>
       };
@@ -272,11 +273,16 @@
         $(document).ready(function() {
           user=dataset.User;
           hotnews=dataset.Hotnews;
+          timenews=dataset.Timenews;
           //if have userinfo change view
           if(!user.null){
             $(".sign").hide();
             $(".logout").show();
             $(".userName").text("hello,"+user.name);
+          }
+          for(var e=0;e<4;e++){
+            $('.tab-pane__category').eq(e).append(timenews[e].time.substring(0,10));
+            $('.time').eq(e).append(timenews[e].time.substring(0,10));
           }
           /**
           HotNews
@@ -302,7 +308,7 @@
                               </a>
                           </div>
                           <div class="posted">
-                              <span class="posted__date">${news.time}</span>
+                              <span class="posted__date">${news.time.substring(0,10)}</span>
                               <ul class="posted__icon">
                                   <li>
                                       <span>
@@ -329,7 +335,7 @@
                           <p class="news__desc">${hotnews[0].name}${hotnews[0].name}</p>
                       </div>
                       <div class="posted">
-                          <span class="posted__date">${hotnews[0].time}</span>
+                          <span class="posted__date">${hotnews[0].time.substring(0,10)}</span>
                           <ul class="posted__icon">
                               <li>
                                   <span>
