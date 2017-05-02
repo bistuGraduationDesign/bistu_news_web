@@ -1,0 +1,210 @@
+﻿<!DOCTYPE html>
+<html lang="zxx">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta content="" name="description">
+        <meta content="" name="keywords">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="HandheldFriendly" content="true">
+        <meta content="telephone=no" name="format-detection">
+        <!-- favicon -->
+        <!-- <link rel="shortcut icon" type="image/png" href="favicon.png" /> -->
+        <!--[if (gt IE 9)|!(IE)]><!-->
+        <!-- custom CSS -->
+        <link href="css/main.css" rel="stylesheet" type="text/css" />
+        <!-- END custom CSS -->
+        <!--<![endif]-->
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+            <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <title>审核</title>
+        <style>
+        .alert{
+          position: fixed;
+          width: 100%;
+          display: none;
+          text-align: center;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="wrapper-sticky-footer">
+            <div class="content-sticky">
+                <!-- Header -->
+                <header>
+                  <div class="header__top">
+                    <div class="container">
+                      <div class="row" style="height:70px;">
+                          <div class="col-sm-3">
+                              <div class="wrap-logo">
+                                  <a href="/" class="logo"></a>
+                              </div>
+                          </div>
+                          <div class="col-sm-offset-2 col-md-offset-5 col-sm-6 col-md-4 hidden-xs">
+                              <div class="col-xs-4 col-sm-5"></div>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                </header>
+                <!-- END header -->
+                <!-- content-->
+                <!-- title -->
+                <div class="wrap wrap_white">
+                  <div class="alert alert-success" role="alert" id='alertBox-success'>Success!</div>
+                  <div class="alert alert-danger" role="alert" id='alertBox-danger'>Error!</div>
+                    <div class="container title">
+                        <h1 class="title__h1 underscore">待审核</h1>
+                    </div>
+                </div>
+                <!-- END title -->
+                <div class="wrap wrap_gray pt20">
+                    <div class="container">
+                        <div class="row">
+                            <div class="wrap-thumbnail">
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END content-->
+            </div>
+            <!-- Footer -->
+            <footer class="footer slate_gray">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <p class="copyright">Copyright &copy; 2017.Company name All rights reserved.</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="social navbar-right">
+                                <p class="social__text">We are in social networks</p>
+                                <ul class="social__list">
+                                    <li class="social__item">
+                                        <a class="facebook" href="#">
+                                            <i class="icon-facebook"></i>
+                                        </a>
+                                    </li>
+                                    <li class="social__item">
+                                        <a class="twitter" href="#">
+                                            <i class="icon-twitter"></i>
+                                        </a>
+                                    </li>
+                                    <li class="social__item">
+                                        <a class="gplus" href="#">
+                                            <i class="icon-gplus"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <!-- END Footer -->
+        <!-- All JavaScript libraries -->
+    <script>
+    var dataset={
+      news:<%- JSON.stringify(news) %>,
+      typelist:<%- JSON.stringify(typeList) %>
+    };
+    console.debug(dataset);
+    </script>
+		<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<!-- Custom JavaScript -->
+        <script src="js/main.js"></script>
+    <script>
+    function alertMsg(type,msg){
+      let state;
+      switch (type) {
+        case 'success':
+          state='成功'
+          break;
+        case 'danger':
+          state='错误'
+          break;
+      }
+      $('#alertBox-'+type).html(`<b>${state}!  </b>${msg}`).fadeIn('slow/400/fast').delay(2000).fadeOut('slow/400/fast');
+    }
+      $(document).ready(function() {
+        //render
+        var news=dataset.news;
+        var thumbnail=$('.wrap-thumbnail');
+        for (var i = 0; i < news.length; i++) {
+          thumbnail.append(`
+            <div class="thumbnail">
+              <div class="thumbnail__news news">
+                <p class="news__category underscore">${dataset.typelist[news[i].type-1]}</p>
+                <a  class="news__caption">${news[i].name}</a>
+                ${news[i].content}
+                <div class="btngroup">
+                  <button class='btn btn-success pass'>通过</button>
+                  <button class='btn btn-danger notpass'>不通过</button>
+                </div>
+            </div>
+          </div>`);
+        }
+        //ajax
+        $('.pass').on('click', function(event) {
+          let index=$('.pass').index(this);
+          $.ajax({
+            url: '/pass',
+            type: 'POST',
+            data: {
+              name: news[index].name,
+              pass: 1
+            },
+          })
+          .done(function(res) {
+            if(res.state){
+              alertMsg('success',res.info);
+              $('.thumbnail').eq(index).hide('slow');
+            }else {
+              alertMsg('danger',res.info);
+            }
+          })
+          .fail(function() {
+            console.log("error");
+          })
+          .always(function() {
+            console.log("complete");
+          });
+        });
+
+        $('.notpass').on('click', function(event) {
+          let index=$('.notpass').index(this);
+          $.ajax({
+            url: '/pass',
+            type: 'POST',
+            data: {
+              name: news[index].name,
+              pass: 0
+            },
+          })
+          .done(function(res) {
+            if(res.state){
+              alertMsg('success',res.info);
+              $('.thumbnail').eq(index).hide('slow');
+            }else {
+              alertMsg('danger',res.info);
+            }
+          })
+          .fail(function() {
+            console.log("error");
+          })
+          .always(function() {
+            console.log("complete");
+          });
+        });
+      });
+    </script>
+    </body>
+</html>

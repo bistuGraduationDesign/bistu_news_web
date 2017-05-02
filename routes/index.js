@@ -367,6 +367,86 @@ module.exports = function(app) {
     }
   });
 
+  app.get("/examine", function(req, res) {
+    let user=req.session.user;
+    if(!user){
+      res.redirect('/');
+    }else if (user.authority!=2){
+      res.redirect('/');
+    }else{
+      async.waterfall([
+        function(callback) {
+          news.getByName_more('',0,function(err, n) {
+            if (err) {
+              callback("请重试", null);
+            } else {
+              callback(null, n);
+            }
+          });
+        }
+      ], function(err,thenews) {
+        if (err) {
+          var msg = {
+            state: false,
+            info: err
+          }; //注册失败返回主册页
+          return res.send(msg);
+        } else {
+            res.render("examine", {
+              news: thenews,
+              typeList:["考研","工作","留学","校园活动","社会热点","爱豆"]
+            });
+        }
+      });
+    }
+  });
+
+  app.post('/pass', function(req, res) {
+    let user=req.session.user;
+    if(!user||user.authority!=2){
+      var msg = {
+        state: false,
+        info: "没有权限!!!"
+      };
+      return res.send(msg);
+    }else{
+      var dename=req.body.name;
+      var pass=req.body.pass;
+      if(pass==1){
+        news.passOrNot(dename,1,function(err){
+          if(err){
+            var msg = {
+              state: false,
+              info: "error"
+            };
+            return res.send(msg);
+          }else{
+            var msg = {
+              state: true,
+              info: "已审核该新闻！"
+            };
+            return res.send(msg);
+          }
+        });
+      }else{
+        news.delete(dename,function(err){
+          if(err){
+            var msg = {
+              state: false,
+              info: "error"
+            };
+            return res.send(msg);
+          }else{
+            var msg = {
+              state: true,
+              info: "已删除该新闻！"
+            };
+            return res.send(msg);
+          }
+        });
+      }
+    }
+  });
   // app.post('/getByName', checkStatus.checkLogin);
   app.post("/getByName", function(req, res) {
     Music.getByName_more(req.body.name, function(err, musics) {

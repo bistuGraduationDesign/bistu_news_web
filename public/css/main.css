@@ -473,6 +473,17 @@ a:hover{
   color: #333;
 }
 
+.thumbnail__news p{
+  display: block;
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #4e4e4e;
+  font-size: 14px;
+  line-height: 20px;
+  font-family: "Roboto", sans-serif;
+  text-decoration: none;
+}
+
 .thumbnail__link {
   display: block;
 }
