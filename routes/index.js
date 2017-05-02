@@ -6,7 +6,7 @@ var async = require("async");
 var settings = require("../settings");
 var User = require("../models/user");
 var news = require("../models/news");
-var comments = require("../models/comment");
+var comment = require("../models/comment");
 
 var upload = require("./upload");
 
@@ -220,8 +220,16 @@ module.exports = function(app) {
             callback(null, n);
           }
         });
+      },function(thenews,callback) {
+        comment.getByNewsName(newsname,function(err, c) {
+          if (err) {
+            callback("请重试", null);
+          } else {
+            callback(null,thenews,c);
+          }
+        });
       }
-    ], function(err,thenews) {
+    ], function(err,thenews,comments) {
       if (err) {
         var msg = {
           state: false,
@@ -239,6 +247,7 @@ module.exports = function(app) {
         }else{
           res.render("news", {
             news: thenews,
+            comments: comments,
             user: user,
             typeList:["考研","工作","留学","校园活动","社会热点","爱豆"]
           });
@@ -447,23 +456,55 @@ module.exports = function(app) {
       }
     }
   });
-  // app.post('/getByName', checkStatus.checkLogin);
-  app.post("/getByName", function(req, res) {
-    Music.getByName_more(req.body.name, function(err, musics) {
-      if (err) {
-        var msg = {
-          state: false,
-          info: err
-        };
-      } else {
+
+  app.post('/comment', function(req, res) {
+    let user=req.session.user;
+    if(!user){
+      res.redirect('/sign');
+    }else{
+      //增加评论
+      console.log(req.body);
+      let newsname=req.body.name;
+      let content=req.body.content;
+      var newComment=new comment({
+        news:newsname,
+        user:user,
+        content:content
+      });
+      newComment.save(function(err, comment) {
+        if (err) {
+          var msg = {
+            state: false,
+            info: err
+          };
+          return res.send(msg);
+        }
         var msg = {
           state: true,
-          info: musics
+          info: '评论完成'
         };
         return res.send(msg);
-      }
-    });
+      });
+    }
   });
+
+  // app.post('/getByName', checkStatus.checkLogin);
+  // app.post("/getByName", function(req, res) {
+  //   Music.getByName_more(req.body.name, function(err, musics) {
+  //     if (err) {
+  //       var msg = {
+  //         state: false,
+  //         info: err
+  //       };
+  //     } else {
+  //       var msg = {
+  //         state: true,
+  //         info: musics
+  //       };
+  //       return res.send(msg);
+  //     }
+  //   });
+  // });
 
   // app.get('/logout', checkStatus.checkLogin);
   app.get("/logout", function(req, res) {

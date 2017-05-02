@@ -1,58 +1,58 @@
 var mongodb = require('./db');
 
 
-function Comments(comment) {
+function Comment(comment) {
 	this.news = comment.news
 	this.user = comment.user;
-	this.time = comment.time;
 	this.content = comment.content;
 };
 
-module.exports = Comments;
+module.exports = Comment;
 
 //存储评论信息
-Comments.prototype.save = function(callback) {
+Comment.prototype.save = function(callback) {
 	var date = new Date(Date.now() + (8 * 60 * 60 * 1000));
 
-	var comments = {
+	var comment = {
 		news: this.news,
 		user: this.user,
-		time: this.time, //首次上传时间
+		time: date, //首次上传时间
 		content: this.content
 	};
+	console.log(comment);
 	//打开数据库
 	mongodb.open(function(err, db) {
 		if (err) {
 			return callback(err); //错误，返回 err 信息
 		}
-		//读取 comments 集合
-		db.collection('comments', function(err, collection) {
+		//读取 comment 集合
+		db.collection('comment', function(err, collection) {
 			if (err) {
 				mongodb.close();
 				return callback(err); //错误，返回 err 信息
 			}
-			//将评论数据插入 comments 集合
-			collection.insert(comments, {
+			//将评论数据插入 comment 集合
+			collection.insert(comment, {
 				safe: true
-			}, function(err, comments) {
+			}, function(err, comment) {
 				mongodb.close();
 				if (err) {
 					return callback(err);
 				}
-				callback(null, comments.ops[0]); //成功！err 为 null，并返回存储后的评论文档
+				callback(null, comment.ops[0]); //成功！err 为 null，并返回存储后的评论文档
 			});
 		});
 	});
 };
 
-Comments.getByNewsName = function(name, callback) {
+Comment.getByNewsName = function(name, callback) {
 	//打开数据库
 	mongodb.open(function(err, db) {
 		if (err) {
 			return callback(err); //错误，返回 err 信息
 		}
-		//读取 comments 集合
-		db.collection('comments', function(err, collection) {
+		//读取 comment 集合
+		db.collection('comment', function(err, collection) {
 			if (err) {
 				mongodb.close();
 				return callback(err); //错误，返回 err 信息
@@ -62,18 +62,18 @@ Comments.getByNewsName = function(name, callback) {
 				news: new RegExp(name)
 			}, {
 				limit: 12
-			}).toArray(function(err, comments) {
+			}).toArray(function(err, comment) {
 				mongodb.close();
 				if (err) {
 					return callback(err);
 				}
-				callback(null, comments);
+				callback(null, comment);
 			});
 		});
 	});
 };
 
-Comments.delete = function(id, callback) {
+Comment.delete = function(id, callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {

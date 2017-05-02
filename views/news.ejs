@@ -154,46 +154,16 @@
                     </div>
                     <div class="col-sm-9 col-md-8 col-lg-6 comments">
                         <p class="comments__title">Comments</p>
-                        <div class="comments__media">
-                            <div class="media-middle">
-                                <i class="media-object" style="background-image: url('img/content/comment.png')"></i>
-                                <div class="comm_info">
-                                    <h4 class="media-heading">Maria</h4>
-                                    <span class="time">today, 12:30</span>
-                                </div>
-                            </div>
-                            <p class="media-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                        </div>
-                        <div class="comments__media">
-                            <div class="media-middle">
-                                <i class="media-object" style="background-image: url('img/content/comment.png')"></i>
-                                <div class="comm_info">
-                                    <h4 class="media-heading">Maria</h4>
-                                    <span class="time">today, 12:30</span>
-                                </div>
-                            </div>
-                            <p class="media-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                        </div>
-                        <div class="comments__media">
-                            <div class="media-middle">
-                                <i class="media-object" style="background-image: url('img/content/comment.png')"></i>
-                                <div class="comm_info">
-                                    <h4 class="media-heading">Maria</h4>
-                                    <span class="time">today, 12:30</span>
-                                </div>
-                            </div>
-                            <p class="media-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        <div id='comments'>
+
                         </div>
                         <div class="comments__form">
-                            <form action="#" method="POST">
+                            <div >
                                 <div class="form-group">
-                                    <input type="text" style="width: 200px;" class="form-control" placeholder="Your name">
+                                    <textarea name="content" id="content" class="form-control" rows="7" required="required" ></textarea>
                                 </div>
-                                <div class="form-group">
-                                    <textarea name="text" id="input" class="form-control" rows="7" required="required"></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-comment">send</button>
-                            </form>
+                                <button  class="btn btn-comment">send</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -238,6 +208,7 @@
       var dataset={
         User:<%- JSON.stringify(user) %>,
         news:<%- JSON.stringify(news) %>,
+        comments:<%- JSON.stringify(comments) %>,
         typelist:<%- JSON.stringify(typeList) %>
       };
       console.debug(dataset);
@@ -250,6 +221,7 @@
         $(document).ready(function() {
           user=dataset.User;
           news=dataset.news;
+          comments=dataset.comments;
           //if have userinfo change view
           if(!user.null){
             $(".sign").hide();
@@ -293,8 +265,50 @@
             <img src="updata/images/${news.name}.jpeg" alt="img" class="current__img">
             ${news.content}`);
           $('p.headline__category').append(news.time.substring(0,10));
+          //comments render
+          let commentsdiv=$('#comments');
+          for (var i = 0; i < comments.length; i++) {
+            commentsdiv.append(`
+              <div class="comments__media">
+                <div class="media-middle">
+                    <i class="media-object" style="background-image: url('img/content/comment.png')"></i>
+                    <div class="comm_info">
+                        <h4 class="media-heading">${comments[i].user.name}</h4>
+                        <span class="time">${comments[i].time.substring(0,10)}</span>
+                    </div>
+                </div>
+                <p class="media-body">${comments[i].content}</p>
+            </div>`);
+          }
+          //评论
+          $('.btn-comment').on('click', function(event) {
+            let name=news.name;
+            let content=$('#content').val();
+            $.ajax({
+              url: '/comment',
+              type: 'POST',
+              data: {
+                name: name,
+                content: content
+              }
+            })
+            .done(function(res) {
+              console.log("success");
+              console.log(res);
+              if(res.state){
+                location.reload();
+              }else {
+                alert(res.info);
+              }
+            })
+            .fail(function() {
+              console.log("error");
+            })
+            .always(function() {
+              console.log("complete");
+            });
 
-
+          });
         });
     </script>
     </body>
