@@ -75,6 +75,8 @@ Comment.getByNewsName = function(name, callback) {
 
 Comment.delete = function(id, callback) {
   //打开数据库
+	var BSON = require('bson').BSONPure;
+	var obj_id = BSON.ObjectID.createFromHexString(id);
   mongodb.open(function(err, db) {
     if (err) {
       return callback(err);
@@ -86,13 +88,12 @@ Comment.delete = function(id, callback) {
         return callback(err);
       }
       collection.remove({
-        _id: id
+        _id: obj_id
       }, {
         safe: true
       }, function(err, result) {
-
+					mongodb.close();
         if (err) {
-          mongodb.close();
           return callback(err);
         }
         callback(null);

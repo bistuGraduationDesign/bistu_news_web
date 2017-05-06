@@ -67,13 +67,58 @@
                         <div class="row">
                             <div class="wrap-thumbnail">
 
-
-
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- END content-->
+                <div class="container title">
+                    <h1 class="title__h1 underscore">管理员管理</h1>
+                </div>
+                <div class="wrap wrap_gray pt20">
+                    <div class="container wrap_white">
+                        <h3>现有管理员</h3>
+                        <table class="table table-bordered table-hover">
+                          <colgroup>
+                            <col style="width:10%">
+                            <col style="width:30%">
+                            <col style="width:30%">
+                            <col style="width:30%">
+                          </colgroup>
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>管理员</th>
+                              <th>邮箱</th>
+                              <th>操作</th>
+                            </tr>
+                          </thead>
+                          <tbody id='admintable'>
+
+                          </tbody>
+                        </table>
+                        <h3>新增管理员</h3>
+                        <table class="table table-bordered table-hover">
+                          <colgroup>
+                            <col style="width:10%">
+                            <col style="width:30%">
+                            <col style="width:30%">
+                            <col style="width:30%">
+                          </colgroup>
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>用户名</th>
+                              <th>邮箱</th>
+                              <th>操作</th>
+                            </tr>
+                          </thead>
+                          <tbody id="usertable">
+
+                          </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
             <!-- Footer -->
             <footer class="footer slate_gray">
@@ -152,58 +197,153 @@
             </div>
           </div>`);
         }
-        //ajax
-        $('.pass').on('click', function(event) {
-          let index=$('.pass').index(this);
+        //ajax render
+        var admins;
+        var users;
+        $.ajax({
+          url: '/getUser',
+          type: 'POST',
+          data: {authority:1}
+        })
+        .done(function(res) {
+          //render admin
+          admins=res.info;
+          let adminstable=$('#admintable');
+          for (var i = 0; i < admins.length; i++) {
+            let a=admins[i];
+            adminstable.append(`
+              <tr>
+                <th>${i+1}</th>
+                <td>${a.name}</td>
+                <td>${a.email}</td>
+                <td>
+                  <button class="btn btn-danger deleteadmin">删除</button>
+                </td>
+              </tr>`);
+          }
           $.ajax({
-            url: '/pass',
+            url: '/getUser',
             type: 'POST',
-            data: {
-              name: news[index].name,
-              pass: 1
-            },
+            data: {authority:0}
           })
           .done(function(res) {
-            if(res.state){
-              alertMsg('success',res.info);
-              $('.thumbnail').eq(index).hide('slow');
-            }else {
-              alertMsg('danger',res.info);
+            //render admin
+            users=res.info;
+            let usertable=$('#usertable');
+            for (var i = 0; i < users.length; i++) {
+              let a=users[i];
+              usertable.append(`
+                <tr>
+                  <th>${i+1}</th>
+                  <td>${a.name}</td>
+                  <td>${a.email}</td>
+                  <td>
+                    <button class="btn btn-success addadmin">提升为管理员</button>
+                  </td>
+                </tr>`);
             }
-          })
-          .fail(function() {
-            console.log("error");
-          })
-          .always(function() {
-            console.log("complete");
+            //render end
+            btninit();
           });
         });
+        //button event
+        function btninit(){
+          $('.pass').on('click', function(event) {
+            let index=$('.pass').index(this);
+            $.ajax({
+              url: '/pass',
+              type: 'POST',
+              data: {
+                name: news[index].name,
+                pass: 1
+              },
+            })
+            .done(function(res) {
+              if(res.state){
+                alertMsg('success',res.info);
+                $('.thumbnail').eq(index).hide('slow');
+              }else {
+                alertMsg('danger',res.info);
+              }
+            })
+            .fail(function() {
+              console.log("error");
+            })
+            .always(function() {
+              console.log("complete");
+            });
+          });
 
-        $('.notpass').on('click', function(event) {
-          let index=$('.notpass').index(this);
-          $.ajax({
-            url: '/pass',
-            type: 'POST',
-            data: {
-              name: news[index].name,
-              pass: 0
-            },
-          })
-          .done(function(res) {
-            if(res.state){
-              alertMsg('success',res.info);
-              $('.thumbnail').eq(index).hide('slow');
-            }else {
-              alertMsg('danger',res.info);
-            }
-          })
-          .fail(function() {
-            console.log("error");
-          })
-          .always(function() {
-            console.log("complete");
+          $('.notpass').on('click', function(event) {
+            let index=$('.notpass').index(this);
+            $.ajax({
+              url: '/pass',
+              type: 'POST',
+              data: {
+                name: news[index].name,
+                pass: 0
+              },
+            })
+            .done(function(res) {
+              if(res.state){
+                alertMsg('success',res.info);
+                $('.thumbnail').eq(index).hide('slow');
+              }else {
+                alertMsg('danger',res.info);
+              }
+            })
+            .fail(function() {
+              console.log("error");
+            })
+            .always(function() {
+              console.log("complete");
+            });
           });
-        });
+
+          $('.deleteadmin').on('click', function(event) {
+            let index=$('.deleteadmin').index(this);
+            $.ajax({
+              url: '/delete',
+              type: 'POST',
+              data: {
+                name: admins[index].name,
+                type: 'user'
+              },
+            })
+            .done(function(res) {
+              if(res.state){
+                alertMsg('success',res.info);
+                setTimeout(function () {
+                  location.reload();
+                },500)
+              }else {
+                alertMsg('danger',res.info);
+              }
+            });
+          });
+
+          $('.addadmin').on('click', function(event) {
+            let index=$('.addadmin').index(this);
+            $.ajax({
+              url: '/addAdmin',
+              type: 'POST',
+              data: {
+                name: users[index].name,
+                type: 'user'
+              },
+            })
+            .done(function(res) {
+              if(res.state){
+                alertMsg('success',res.info);
+                setTimeout(function () {
+                  location.reload();
+                },500)
+              }else {
+                alertMsg('danger',res.info);
+              }
+            });
+          });
+        }
       });
     </script>
     </body>

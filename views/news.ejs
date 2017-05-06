@@ -31,7 +31,7 @@
                   <div class="row" style="height:70px;">
                       <div class="col-sm-3">
                           <div class="wrap-logo">
-                              <a href="index.html" class="logo"></a>
+                              <a href="/" class="logo"></a>
                           </div>
                       </div>
                       <div class="col-sm-offset-2 col-md-offset-5 col-sm-6 col-md-4 hidden-xs">
@@ -130,7 +130,7 @@
                         <div class="headline clearfix">
                             <div class="headline__data">
                                 <a data-toggle="modal" href="#myModal" class="headline__category headline__category_red" style="display:none">删除</a>
-                                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <!-- <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                   <div class="modal-dialog">
                                     <div class="modal-content">
                                       <div class="modal-body">
@@ -140,9 +140,9 @@
                                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                                         <button type="button" class="btn btn-primary" id="delete">确认</button>
                                       </div>
-                                    </div><!-- /.modal-content -->
-                                  </div><!-- /.modal-dialog -->
-                                </div><
+                                    </div>
+                                  </div>
+                                </div> -->
                                 <a href="/category?type=<%=news.type%>" class="headline__category headline__category_orange"><%=typeList[(news.type-1)] %></a>
                                 <p class="headline__category"></p>
                             </div>
@@ -222,43 +222,6 @@
           user=dataset.User;
           news=dataset.news;
           comments=dataset.comments;
-          //if have userinfo change view
-          if(!user.null){
-            $(".sign").hide();
-            $(".logout").show();
-            $(".userName").text("hello,"+user.name);
-            if(user.authority==1){
-              $(".headline__category_red").show();
-              $("#delete").on('click', function(event) {
-                if(!$("#delete").hasClass("disabled")){
-                  $("#delete").text('删除中...').addClass('disabled');
-                  $.ajax({
-                    url: '/delete',
-                    type: 'POST',
-                    data: {name: news.name}
-                  })
-                  .done(function(res) {
-                    console.log("success");
-                    if(res.state){
-                      $("#delete").text('已删除');
-                    }
-                    $(".modal-body").text(res.info);
-                    location.href = "/";
-                  })
-                  .fail(function() {
-                    console.log("error");
-                  })
-                  .always(function() {
-                    console.log("complete");
-                  });
-
-                }
-              });
-            }
-          }
-          function deletenews(){
-            alert(1);
-          }
           //news render
           $(".current").append(`
             <h1 class="text-center yel_line current__title">${news.name}</h1>
@@ -276,39 +239,97 @@
                         <h4 class="media-heading">${comments[i].user.name}</h4>
                         <span class="time">${comments[i].time.substring(0,10)}</span>
                     </div>
+                    <i class="glyphicon glyphicon-remove" style="float:right;cursor:pointer;display:none"></i>
                 </div>
                 <p class="media-body">${comments[i].content}</p>
             </div>`);
           }
           //评论
           $('.btn-comment').on('click', function(event) {
-            let name=news.name;
-            let content=$('#content').val();
-            $.ajax({
-              url: '/comment',
-              type: 'POST',
-              data: {
-                name: name,
-                content: content
-              }
-            })
-            .done(function(res) {
-              console.log("success");
-              console.log(res);
-              if(res.state){
-                location.reload();
-              }else {
-                alert(res.info);
-              }
-            })
-            .fail(function() {
-              console.log("error");
-            })
-            .always(function() {
-              console.log("complete");
-            });
-
+            if(user.null){
+              location.href='/sign';
+            }else {
+              let name=news.name;
+              let content=$('#content').val();
+              $.ajax({
+                url: '/comment',
+                type: 'POST',
+                data: {
+                  name: name,
+                  content: content
+                }
+              })
+              .done(function(res) {
+                console.log("success");
+                console.log(res);
+                if(res.state){
+                  location.reload();
+                }else {
+                  alert(res.info);
+                }
+              })
+              .fail(function() {
+                console.log("error");
+              })
+              .always(function() {
+                console.log("complete");
+              });
+            }
           });
+          //if have userinfo change view
+          if(!user.null){
+            $(".sign").hide();
+            $(".logout").show();
+            $(".userName").text("hello,"+user.name);
+            // if(user.authority==1){
+            //   $(".headline__category_red").show();
+            //   $(".glyphicon-remove").show();
+            //   $("#delete").on('click', function(event) {
+            //     if(!$("#delete").hasClass("disabled")){
+            //       $("#delete").text('删除中...').addClass('disabled');
+            //       $.ajax({
+            //         url: '/delete',
+            //         type: 'POST',
+            //         data: {name: news.name,type:"news"}
+            //       })
+            //       .done(function(res) {
+            //         console.log("success");
+            //         if(res.state){
+            //           $("#delete").text('已删除');
+            //         }
+            //         $(".modal-body").text(res.info);
+            //         location.href = "/";
+            //       })
+            //       .fail(function() {
+            //         console.log("error");
+            //       })
+            //       .always(function() {
+            //         console.log("complete");
+            //       });
+            //
+            //     }
+            //   });
+            //   $('.glyphicon-remove').on('click', function(event) {
+            //     let index=$('.glyphicon-remove').index(this);
+            //     $.ajax({
+            //       url: '/delete',
+            //       type: 'POST',
+            //       data: {id: comments[index]._id,type:"comment"}
+            //     })
+            //     .done(function(res) {
+            //       console.debug(res);
+            //       location.reload();
+            //     })
+            //     .fail(function() {
+            //       console.log("error");
+            //     })
+            //     .always(function() {
+            //       console.log("complete");
+            //     });
+            //   });
+            // }
+          }
+
         });
     </script>
     </body>

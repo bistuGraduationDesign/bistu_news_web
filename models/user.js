@@ -70,7 +70,63 @@ User.get = function(name, callback) {
   });
 };
 
-User.giveAdmain = function(name, callback) {
+User.getAll = function(authority, callback) {
+  //打开数据库
+  mongodb.open(function(err, db) {
+    if (err) {
+      return callback(err); //错误，返回 err 信息
+    }
+    //读取 users 集合
+    db.collection('users', function(err, collection) {
+      if (err) {
+        mongodb.close();
+        return callback(err); //错误，返回 err 信息
+      }
+      //查找用户名（name键）值为 name 一个文档
+      collection.find({
+        authority: authority
+      }, {
+        limit: 12
+      }).toArray(function(err, users) {
+        mongodb.close();
+        if (err) {
+          return callback(err);
+        }
+        callback(null, users);
+      });
+    });
+  });
+};
+
+User.delete = function(name, callback) {
+  //打开数据库
+  mongodb.open(function(err, db) {
+    if (err) {
+      return callback(err);
+    }
+    //读取 posts 集合
+    db.collection('users', function(err, collection) {
+      if (err) {
+        mongodb.close();
+        return callback(err);
+      }
+      collection.remove({
+        name: name
+      }, {
+        safe: true
+      }, function(err, result) {
+        mongodb.close();
+        if (err) {
+          return callback(err);
+        }
+        callback(null);
+      });
+
+    });
+  });
+}
+
+User.giveAdmin = function(name, callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {

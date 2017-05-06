@@ -65,7 +65,7 @@ module.exports = function(app) {
     var password = md5.update(req.body.password).digest('hex');
     //检查用户是否存在
     User.get(req.body.name, function(err, user) {
-      if (!user) {
+      if (!user||req.body.authority.indexOf(user.authority.toString())==-1) {
         var msg = {
           state: false,
           info: "用户不存在"
@@ -86,7 +86,8 @@ module.exports = function(app) {
       req.session.user = user;
       var msg = {
         state: true,
-        info: "sussess"
+        info: "sussess",
+        user: user
       };
       return res.send(msg);
     });
@@ -257,8 +258,46 @@ module.exports = function(app) {
     });
   });
 
+  /*
+    admin
+  */
+  app.get("/admin-sign",function(req,res){
+    res.render("admin-sign", {});
+  });
 
-  // app.get('/upload', checkStatus.checkLogin);
+  app.post("/getUser",function(req,res){
+    let user=req.session.user;
+    let authority=parseInt(req.body.authority);
+    if(!user){
+      var msg = {
+        state: false,
+        info: '没有权限'
+      }; //注册失败返回主册页
+      return res.send(msg);
+    }else if (user.authority!=2&&user.authority!=1){
+      var msg = {
+        state: false,
+        info: '没有权限'
+      }; //注册失败返回主册页
+      return res.send(msg);
+    }else{
+      User.getAll(authority,function(err,users){
+        if(err){
+          var msg = {
+            state: false,
+            info: err
+          }; //注册失败返回主册页
+          return res.send(msg);
+        }
+        var msg = {
+          state: false,
+          info: users
+        }; //注册失败返回主册页
+        return res.send(msg);
+      });
+    }
+  });
+
   app.get("/upload", function(req, res) {
     let user=req.session.user;
     if(!user){
@@ -266,7 +305,9 @@ module.exports = function(app) {
     }else if (user.authority!=1){
       res.redirect('/');
     }else(
-      res.render("upload", {})
+      res.render("upload", {
+        user:user
+      })
     )
   });
 
@@ -350,15 +391,80 @@ module.exports = function(app) {
 
   app.post('/delete', function(req, res) {
     let user=req.session.user;
-    if(!user||user.authority!=1){
+    let type=req.body.type;
+    if(!user||user.authority==0){
       var msg = {
         state: false,
         info: "没有权限!!!"
       };
       return res.send(msg);
     }else{
-      var dename=req.body.name;
-      news.delete(dename,function(err){
+      if(type=="news"){
+        var dename=req.body.name;
+        news.delete(dename,function(err){
+          if(err){
+            var msg = {
+              state: false,
+              info: "error"
+            };
+            return res.send(msg);
+          }else{
+            var msg = {
+              state: true,
+              info: "已删除该新闻！"
+            };
+            return res.send(msg);
+          }
+        })
+      }else if (type=="comment") {
+        var deid=req.body.id;
+        console.log(deid);
+        comment.delete(deid,function(err){
+          if(err){
+            var msg = {
+              state: false,
+              info: "error"
+            };
+            return res.send(msg);
+          }else{
+            var msg = {
+              state: true,
+              info: "已删除该评论！"
+            };
+            return res.send(msg);
+          }
+        })
+      }else if (type=="user") {
+        var dename=req.body.name;
+        User.delete(dename,function(err){
+          if(err){
+            var msg = {
+              state: false,
+              info: "error"
+            };
+            return res.send(msg);
+          }else{
+            var msg = {
+              state: true,
+              info: "已删除！"
+            };
+            return res.send(msg);
+          }
+        });
+      }
+    }
+  });
+
+  app.post("/addAdmin",function(req,res){
+    let user=req.session.user;
+    if(!user||user.authority!=2){
+      var msg = {
+        state: false,
+        info: "没有权限!!!"
+      };
+      return res.send(msg);
+    }else{
+      User.giveAdmin(req.body.name,function(err){
         if(err){
           var msg = {
             state: false,
@@ -368,13 +474,59 @@ module.exports = function(app) {
         }else{
           var msg = {
             state: true,
-            info: "已删除该新闻！"
+            info: "已添加！"
           };
           return res.send(msg);
         }
       })
     }
   });
+
+  app.get("/admin", function(req, res) {
+    let user=req.session.user;
+    if(!user){
+      res.redirect('/');
+    }else if (user.authority!=1){
+      res.redirect('/');
+    }else{
+      async.waterfall([
+        function(callback) {
+          news.getByName_more('',1,function(err, n) {
+            if (err) {
+              callback("请重试", null);
+            } else {
+              callback(null, n);
+            }
+          });
+        },
+        function(thenews,callback){
+          User.getAll(0,function(err, n) {
+            if (err) {
+              callback("请重试", null);
+            } else {
+              callback(null,thenews,n);
+            }
+          });
+        }
+      ], function(err,thenews,users) {
+        if (err) {
+          var msg = {
+            state: false,
+            info: err
+          }; //注册失败返回主册页
+          return res.send(msg);
+        } else {
+            res.render("admin", {
+              user: user,
+              news: thenews,
+              users: users,
+              typeList:["考研","工作","留学","校园活动","社会热点","爱豆"]
+            });
+        }
+      });
+    }
+  });
+
 
   app.get("/examine", function(req, res) {
     let user=req.session.user;

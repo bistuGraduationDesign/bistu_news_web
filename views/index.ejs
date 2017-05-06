@@ -31,7 +31,7 @@
                     <div class="row" style="height:70px;">
                         <div class="col-sm-3">
                             <div class="wrap-logo">
-                                <a href="index.html" class="logo"></a>
+                                <a href="/" class="logo"></a>
                             </div>
                         </div>
                         <div class="col-sm-offset-2 col-md-offset-5 col-sm-6 col-md-4 hidden-xs">
@@ -279,12 +279,12 @@
             $(".sign").hide();
             $(".logout").show();
             $(".userName").text("hello,"+user.name);
-            let secreturl=['/upload','/examine'];
-            if(user.authority){
-              $(".userName").on('click', function(event) {
-                location.href = secreturl[user.authority-1];
-              });
-            }
+            // let secreturl=['/upload','/examine'];
+            // if(user.authority){
+            //   $(".userName").on('click', function(event) {
+            //     location.href = secreturl[user.authority-1];
+            //   });
+            // }
           }
           for(var e=0;e<4;e++){
             $('.tab-pane__category').eq(e).append(timenews[e].time.substring(0,10));
