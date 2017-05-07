@@ -507,8 +507,17 @@ module.exports = function(app) {
               callback(null,thenews,n);
             }
           });
+        },
+        function(thenews,users,callback){
+          comment.getAll(function(err, c) {
+            if (err) {
+              callback("请重试", null);
+            } else {
+              callback(null,thenews,users,c);
+            }
+          });
         }
-      ], function(err,thenews,users) {
+      ], function(err,thenews,users,comments) {
         if (err) {
           var msg = {
             state: false,
@@ -520,6 +529,7 @@ module.exports = function(app) {
               user: user,
               news: thenews,
               users: users,
+              comments: comments,
               typeList:["考研","工作","留学","校园活动","社会热点","爱豆"]
             });
         }

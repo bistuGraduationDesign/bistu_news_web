@@ -85,8 +85,6 @@ User.getAll = function(authority, callback) {
       //查找用户名（name键）值为 name 一个文档
       collection.find({
         authority: authority
-      }, {
-        limit: 12
       }).toArray(function(err, users) {
         mongodb.close();
         if (err) {

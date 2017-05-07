@@ -102,18 +102,110 @@
           </div>
       </header>
       <!-- END header -->
-      <section class="slate_gray">
-        <div class="alert alert-success" role="alert" id='alertBox-success'>Success!</div>
-        <div class="alert alert-danger" role="alert" id='alertBox-danger'>Error!</div>
-        <div class="container kv-main" >
-
+        <div class="wrap wrap_white">
+          <div class="alert alert-success" role="alert" id='alertBox-success'>Success!</div>
+          <div class="alert alert-danger" role="alert" id='alertBox-danger'>Error!</div>
+            <div class="container title">
+                <h1 class="title__h1 underscore">新闻管理</h1>
+            </div>
         </div>
-      </section>
+        <!-- END title -->
+        <div class="wrap wrap_white pt20">
+            <div class="container">
+              <div class="container wrap_white">
+                  <table class="table table-bordered table-hover">
+                    <colgroup>
+                      <col style="width:10%">
+                      <col style="width:50%">
+                      <col style="width:10%">
+                      <col style="width:10%">
+                      <col style="width:20%">
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>新闻标题</th>
+                        <th>分类</th>
+                        <th>日期</th>
+                        <th>操作</th>
+                      </tr>
+                    </thead>
+                    <tbody id='newstable'>
+
+                    </tbody>
+                  </table>
+              </div>
+            </div>
+        </div>
+        <!-- END content-->
+        <div class="wrap wrap_white">
+            <div class="container title">
+                <h1 class="title__h1 underscore">用户管理</h1>
+            </div>
+        </div>
+        <div class="wrap wrap_white pt20">
+            <div class="container wrap_white">
+                <table class="table table-bordered table-hover">
+                  <colgroup>
+                    <col style="width:10%">
+                    <col style="width:30%">
+                    <col style="width:30%">
+                    <col style="width:30%">
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>用户名</th>
+                      <th>邮箱</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id='userstable'>
+
+                  </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="wrap wrap_white">
+            <div class="container title">
+                <h1 class="title__h1 underscore">评论管理</h1>
+            </div>
+        </div>
+        <div class="wrap wrap_white pt20">
+            <div class="container wrap_white">
+                <table class="table table-bordered table-hover">
+                  <colgroup>
+                    <col style="width:5%">
+                    <col style="width:30%">
+                    <col style="width:10%">
+                    <col style="width:10%">
+                    <col style="width:40%">
+                    <col style="width:5%">
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>新闻标题</th>
+                      <th>用户名</th>
+                      <th>评论日期</th>
+                      <th>内容</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id='commentstable'>
+
+                  </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
   <script type="text/javascript">
     var dataset={
       user:<%- JSON.stringify(user) %>,
       users:<%- JSON.stringify(users) %>,
       news:<%- JSON.stringify(news)%>,
+      comments:<%- JSON.stringify(comments)%>,
       typelist:<%- JSON.stringify(typeList) %>
     };
   console.debug(dataset);
@@ -136,11 +228,146 @@
       user=dataset.user;
       users=dataset.users;
       news=dataset.news;
+      comments=dataset.comments;
       if(!user.null){
         $(".sign").hide();
         $(".logout").show();
         $(".userName").text("hello,"+user.name);
       }
+      //render
+      let newstable=$("#newstable");
+      let userstable=$("#userstable");
+      let commentstable=$("#commentstable");
+      for (var i = 0; i < news.length; i++) {
+        let n=news[i];
+        newstable.append(`
+          <tr>
+            <th>${i+1}</th>
+            <td>${n.name}</td>
+            <td>${dataset.typelist[parseInt(n.type)-1]}</td>
+            <td>${n.time.substring(0,10)}</td>
+            <td>
+              <button class="btn btn-success preview">预览</button>
+              <button class="btn btn-info change">修改</button>
+              <button class="btn btn-danger delete">删除</button>
+            </td>
+          </tr>
+          `);
+      }
+      for (var i = 0; i < users.length; i++) {
+        let n=users[i];
+        userstable.append(`
+          <tr>
+            <th>${i+1}</th>
+            <td>${n.name}</td>
+            <td>${n.email}</td>
+            <td>
+              <button class="btn btn-danger userdelete">删除</button>
+            </td>
+          </tr>
+          `);
+      }
+      for (var i = 0; i < comments.length; i++) {
+        let n=comments[i];
+        commentstable.append(`
+          <tr>
+            <th>${i+1}</th>
+            <td>${n.news}</td>
+            <td>${n.user.name}</td>
+            <td>${n.time.substring(0,10)}</td>
+            <td>${n.content}</td>
+            <td>
+              <button class="btn btn-danger commentdelete">删除</button>
+            </td>
+          </tr>
+          `);
+      }
+      //end render
+      //button event
+      $(".preview").on('click', function(event) {
+        let index=$('.preview').index(this);
+        location.href='/news?name='+news[index].name;
+      });
+
+      $(".change").on('click', function(event) {
+        let index=$('.change').index(this);
+        $.ajax({
+          url: '',
+          type: 'POST',
+          data: {param1: 'value1'}
+        })
+        .done(function() {
+          console.log("success");
+        });
+      });
+
+      $(".delete").on('click', function(event) {
+        let index=$('.delete').index(this);
+        $.ajax({
+          url: '/delete',
+          type: 'POST',
+          data: {
+            name: news[index].name,
+            type: "news"
+          }
+        })
+        .done(function(res) {
+          if(res.state){
+            alertMsg('success',res.info);
+            setTimeout(function () {
+              location.reload();
+            },500)
+          }else {
+            alertMsg('danger',res.info);
+          }
+        });
+      });
+
+      $(".userdelete").on('click', function(event) {
+        let index=$('.userdelete').index(this);
+        $.ajax({
+          url: '/delete',
+          type: 'POST',
+          data: {
+            name: users[index].name,
+            type: "user"
+          }
+        })
+        .done(function(res) {
+          if(res.state){
+            alertMsg('success',res.info);
+            setTimeout(function () {
+              location.reload();
+            },500)
+          }else {
+            alertMsg('danger',res.info);
+          }
+        });
+      });
+
+      $(".commentdelete").on('click', function(event) {
+        let index=$('.commentdelete').index(this);
+        $.ajax({
+          url: '/delete',
+          type: 'POST',
+          data: {
+            id: comments[index]._id,
+            type: "comment"
+          }
+        })
+        .done(function(res) {
+          console.debug(res);
+          if(res.state){
+            alertMsg('success',res.info);
+            setTimeout(function () {
+              location.reload();
+            },500)
+          }else {
+            alertMsg('danger',res.info);
+          }
+        });
+      });
+
     });
 	</script>
   </body>
