@@ -291,14 +291,7 @@
 
       $(".change").on('click', function(event) {
         let index=$('.change').index(this);
-        $.ajax({
-          url: '',
-          type: 'POST',
-          data: {param1: 'value1'}
-        })
-        .done(function() {
-          console.log("success");
-        });
+        location.href="./change?name="+news[index].name;
       });
 
       $(".delete").on('click', function(event) {

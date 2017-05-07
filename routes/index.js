@@ -304,11 +304,11 @@ module.exports = function(app) {
       res.redirect('/');
     }else if (user.authority!=1){
       res.redirect('/');
-    }else(
+    }else{
       res.render("upload", {
         user:user
       })
-    )
+    }
   });
 
   // app.post('/upload-file', checkStatus.checkLogin);
@@ -388,6 +388,95 @@ module.exports = function(app) {
       return res.send(msg);
     });
   });
+
+  app.get("/change", function(req, res) {
+    let user=req.session.user;
+    if(!user){
+      res.redirect('/');
+    }else if (user.authority!=1){
+      res.redirect('/');
+    }else{
+      let cname=req.query.name;
+      news.getByName(cname,1,function(err,n){
+        if (err) {
+          var msg = {
+            state: false,
+            info: err
+          }; //注册失败返回主册页
+          return res.send(msg);
+        } else {
+            res.render("change", {
+              news: n
+            });
+        }
+      });
+    }
+  });
+
+  app.post("/change", function(req, res) {
+    async.waterfall([
+      function(callback) {
+        news.delete(req.body.name,function(err, music) {
+          if (err) {
+            callback("请重试");
+          } else {
+            callback(null);
+          }
+        })
+      },
+      function(callback) {
+        var type = 3;
+        //摇滚1 民谣2 流行3
+        switch (req.body.type) {
+          case "考研":
+            type = 1;
+            break;
+          case "工作":
+            type = 2;
+            break;
+          case "留学":
+            type = 3;
+            break;
+          case "校园活动":
+            type = 4;
+            break;
+          case "社会热点":
+            type = 5;
+            break;
+          case "爱豆":
+            type = 6;
+            break;
+        }
+        //音乐名、作者、类型、次数
+        var newNews = new news({
+          name: req.body.name,
+          time: req.body.date,
+          content: req.body.content,
+          type: type
+        });
+        //如果不存在则新增用户
+        newNews.save(function(err, music) {
+          if (err) {
+            callback("请重试");
+          }
+          callback(null); //成功后返回
+        });
+      }
+    ], function(err, result) {
+      if (err) {
+        var msg = {
+          error: err
+        }; //注册失败返回主册页
+      } else {
+        var msg = {
+          state: true,
+          info: "sussess"
+        };
+      }
+      return res.send(msg);
+    });
+  });
+
 
   app.post('/delete', function(req, res) {
     let user=req.session.user;
