@@ -13,6 +13,8 @@
         <!--[if (gt IE 9)|!(IE)]><!-->
         <!-- custom CSS -->
         <link href="css/main.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="css/remodal.css">
+        <link rel="stylesheet" href="css/remodal-default-theme.css">
         <!-- END custom CSS -->
         <!--<![endif]-->
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -32,7 +34,7 @@
         </style>
     </head>
     <body>
-        <div class="wrapper-sticky-footer">
+        <div class="wrapper-sticky-footer remodal-bg">
             <div class="content-sticky">
                 <!-- Header -->
                 <header>
@@ -155,6 +157,16 @@
                 </div>
             </footer>
         </div>
+        <div class="remodal" data-remodal-id="modal">
+          <button data-remodal-action="close" class="remodal-close"></button>
+          <h1>确认？</h1>
+          <p>
+            确认执行此操作？
+          </p>
+          <br>
+          <button data-remodal-action="cancel" class="remodal-cancel">取消</button>
+          <button data-remodal-action="confirm" class="remodal-confirm">确认</button>
+        </div>
         <!-- END Footer -->
         <!-- All JavaScript libraries -->
     <script>
@@ -166,6 +178,7 @@
     </script>
 		<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
+    <script src="js/remodal.min.js"></script>
 		<!-- Custom JavaScript -->
         <script src="js/main.js"></script>
     <script>
@@ -249,100 +262,117 @@
           });
         });
         //button event
+        var inst = $('[data-remodal-id=modal]').remodal();//模态框
+        //model event
+        function modalevent(callback){
+          inst.open();
+          $(document).on('confirmation', '.remodal', function () {
+            callback();
+          });
+        }
+
         function btninit(){
           $('.pass').on('click', function(event) {
-            let index=$('.pass').index(this);
-            $.ajax({
-              url: '/pass',
-              type: 'POST',
-              data: {
-                name: news[index].name,
-                pass: 1
-              },
-            })
-            .done(function(res) {
-              if(res.state){
-                alertMsg('success',res.info);
-                $('.thumbnail').eq(index).hide('slow');
-              }else {
-                alertMsg('danger',res.info);
-              }
-            })
-            .fail(function() {
-              console.log("error");
-            })
-            .always(function() {
-              console.log("complete");
+            modalevent(()=>{
+              let index=$('.pass').index(this);
+              $.ajax({
+                url: '/pass',
+                type: 'POST',
+                data: {
+                  name: news[index].name,
+                  pass: 1
+                },
+              })
+              .done(function(res) {
+                if(res.state){
+                  alertMsg('success',res.info);
+                  $('.thumbnail').eq(index).hide('slow');
+                }else {
+                  alertMsg('danger',res.info);
+                }
+              })
+              .fail(function() {
+                console.log("error");
+              })
+              .always(function() {
+                console.log("complete");
+              });
             });
           });
 
           $('.notpass').on('click', function(event) {
-            let index=$('.notpass').index(this);
-            $.ajax({
-              url: '/pass',
-              type: 'POST',
-              data: {
-                name: news[index].name,
-                pass: 0
-              },
-            })
-            .done(function(res) {
-              if(res.state){
-                alertMsg('success',res.info);
-                $('.thumbnail').eq(index).hide('slow');
-              }else {
-                alertMsg('danger',res.info);
-              }
-            })
-            .fail(function() {
-              console.log("error");
-            })
-            .always(function() {
-              console.log("complete");
+            modalevent(()=>{
+              let index=$('.notpass').index(this);
+              $.ajax({
+                url: '/pass',
+                type: 'POST',
+                data: {
+                  name: news[index].name,
+                  pass: 0
+                },
+              })
+              .done(function(res) {
+                if(res.state){
+                  alertMsg('success',res.info);
+                  $('.thumbnail').eq(index).hide('slow');
+                }else {
+                  alertMsg('danger',res.info);
+                }
+              })
+              .fail(function() {
+                console.log("error");
+              })
+              .always(function() {
+                console.log("complete");
+              });
             });
           });
 
           $('.deleteadmin').on('click', function(event) {
-            let index=$('.deleteadmin').index(this);
-            $.ajax({
-              url: '/delete',
-              type: 'POST',
-              data: {
-                name: admins[index].name,
-                type: 'user'
-              },
-            })
-            .done(function(res) {
-              if(res.state){
-                alertMsg('success',res.info);
-                setTimeout(function () {
-                  location.reload();
-                },500)
-              }else {
-                alertMsg('danger',res.info);
-              }
+            modalevent(()=>{
+              let index=$('.deleteadmin').index(this);
+              $.ajax({
+                url: '/delete',
+                type: 'POST',
+                data: {
+                  name: admins[index].name,
+                  type: 'user'
+                },
+              })
+              .done(function(res) {
+                if(res.state){
+                  alertMsg('success',res.info);
+                  setTimeout(function () {
+                    location.reload();
+                  },500)
+                }else {
+                  alertMsg('danger',res.info);
+                }
+              });
             });
           });
 
           $('.addadmin').on('click', function(event) {
-            let index=$('.addadmin').index(this);
-            $.ajax({
-              url: '/addAdmin',
-              type: 'POST',
-              data: {
-                name: users[index].name,
-                type: 'user'
-              },
-            })
-            .done(function(res) {
-              if(res.state){
-                alertMsg('success',res.info);
-                setTimeout(function () {
-                  location.reload();
-                },500)
-              }else {
-                alertMsg('danger',res.info);
-              }
+            modalevent(()=>{
+              let index=$('.addadmin').index(this);
+              $.ajax({
+                url: '/addAdmin',
+                type: 'POST',
+                data: {
+                  name: users[index].name,
+                  type: 'user'
+                },
+              })
+              .done(function(res) {
+                if(res.state){
+                  alertMsg('success',res.info);
+                  setTimeout(function () {
+                    location.reload();
+                  },500)
+                }else {
+                  alertMsg('danger',res.info);
+                }
+              });
             });
           });
         }
