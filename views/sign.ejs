@@ -349,6 +349,10 @@ input {
         <span>Password</span>
         <input type="password" id="password-up"/>
       </label>
+      <label>
+        <span>Password-repeat</span>
+        <input type="password" id="password-up-2"/>
+      </label>
       <!-- <label>
         <img id = 'ccap' src="/verificationCode/1" class='form-control-ccap wow fadeInUp' alt="刷新" data-wow-delay='.8s' class="verCodePic" required>
         <input type="text" id="ccapcode"/>
@@ -387,7 +391,7 @@ input {
       var buttonSignup = document.getElementById('signup');
       buttonSignup.addEventListener('click', function() {
         console.log("aaaa");
-        if(!(document.getElementById('name-up').value&&document.getElementById('email-up').value&&document.getElementById('password-up').value)){
+        if(!(document.getElementById('name-up').value&&document.getElementById('email-up').value&&document.getElementById('password-up').value&&document.getElementById('password-up-2').value)){
           toastr.error("输入全部信息", "失败", {
             "closeButton": true,
             "debug": false,
@@ -410,7 +414,7 @@ input {
               name: document.getElementById('name-up').value,
               email: document.getElementById('email-up').value,
               password: document.getElementById('password-up').value,
-              passwordrepeat:document.getElementById('password-up').value
+              passwordrepeat:document.getElementById('password-up-2').value
             },
             dataType: "json",
             success: function(res1) {
