@@ -1,25 +1,25 @@
 var mongodb = require('./db');
 
-function News(news) {
-  this.name = news.name;
-  this.time = news.time;
-  this.type = news.type;
-  this.content = news.content;
+function xinwen(xinwen) {
+  this.name = xinwen.name;
+  this.time = xinwen.time;
+  this.type = xinwen.type;
+  this.content = xinwen.content;
 };
 
-module.exports = News;
+module.exports = xinwen;
 
 //存储新闻信息
-News.prototype.save = function(callback) {
-  let timeStr=this.time;
-  let timeArr=new Array(3);
-  timeArr=timeStr.split('-');
-  var time=new Date(timeArr[0],timeArr[1]-1,timeArr[2]);
+xinwen.prototype.baocun = function(callback) {
+  let timeStr = this.time;
+  let timeArr = new Array(3);
+  timeArr = timeStr.split('-');
+  var time = new Date(timeArr[0], timeArr[1] - 1, timeArr[2]);
   console.log(time);
-  var news = {
+  var xinwen = {
     name: this.name, //新闻名
     type: this.type, //新闻类型
-    commentCount: 0, //新闻播放次数，用以统计热度
+    Count: 0, //新闻播放次数，用以统计热度
     time: time, //首次上传时间
     content: this.content,
     pass: 0 //0:待审核，1：通过
@@ -29,34 +29,34 @@ News.prototype.save = function(callback) {
     if (err) {
       return callback(err); //错误，返回 err 信息
     }
-    //读取 news 集合
-    db.collection('news', function(err, collection) {
+    //读取 xinwen 集合
+    db.collection('xinwen', function(err, collection) {
       if (err) {
         mongodb.close();
         return callback(err); //错误，返回 err 信息
       }
-      //将新闻数据插入 news 集合
-      collection.insert(news, {
+      //将新闻数据插入 xinwen 集合
+      collection.insert(xinwen, {
         safe: true
-      }, function(err, news) {
+      }, function(err, xinwen) {
         mongodb.close();
         if (err) {
           return callback(err);
         }
-        callback(null, news.ops[0]); //成功！err 为 null，并返回存储后的新闻文档
+        callback(null, xinwen.ops[0]); //成功！err 为 null，并返回存储后的新闻文档
       });
     });
   });
 };
 
-News.getByName = function(name, pass, callback) {
+xinwen.mingcheng = function(name, pass, callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {
       return callback(err); //错误，返回 err 信息
     }
-    //读取 news 集合
-    db.collection('news', function(err, collection) {
+    //读取 xinwen 集合
+    db.collection('xinwen', function(err, collection) {
       if (err) {
         mongodb.close();
         return callback(err); //错误，返回 err 信息
@@ -65,26 +65,26 @@ News.getByName = function(name, pass, callback) {
       collection.findOne({
         name: name,
         pass: pass
-      }, function(error, news) {
+      }, function(error, xinwen) {
         mongodb.close();
         if (err) {
           return callback(err);
         }
-        callback(null, news);
+        callback(null, xinwen);
       });
     });
 
   });
 };
 
-News.getByName_more = function(name, pass, callback) {
+xinwen.mingcheng_1 = function(name, pass, callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {
       return callback(err); //错误，返回 err 信息
     }
-    //读取 news 集合
-    db.collection('news', function(err, collection) {
+    //读取 xinwen 集合
+    db.collection('xinwen', function(err, collection) {
       if (err) {
         mongodb.close();
         return callback(err); //错误，返回 err 信息
@@ -95,24 +95,24 @@ News.getByName_more = function(name, pass, callback) {
         pass: pass
       }, {
         limit: 12
-      }).toArray(function(err, news) {
+      }).toArray(function(err, xinwen) {
         mongodb.close();
         if (err) {
           return callback(err);
         }
-        callback(null, news);
+        callback(null, xinwen);
       });
     });
   });
 };
 
-News.getByType = function(type, callback) {
+xinwen.leixing = function(type, callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {
       return callback(err); //错误，返回 err 信息
     }
-    db.collection('news', function(err, collection) {
+    db.collection('xinwen', function(err, collection) {
       if (err) {
         mongodb.close();
         return callback(err); //错误，返回 err 信息
@@ -123,25 +123,25 @@ News.getByType = function(type, callback) {
         pass: 1
       }, {
         limit: 12
-      }).toArray(function(err, news) {
+      }).toArray(function(err, xinwen) {
         mongodb.close();
         if (err) {
           return callback(err);
         }
-        callback(null, news);
+        callback(null, xinwen);
       });
     });
   });
 };
 
-News.getByHot = function(callback) {
+xinwen.redu = function(callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {
       return callback(err); //错误，返回 err 信息
     }
-    //读取 news 集合
-    db.collection('news', function(err, collection) {
+    //读取 xinwen 集合
+    db.collection('xinwen', function(err, collection) {
       if (err) {
         mongodb.close();
         return callback(err); //错误，返回 err 信息
@@ -151,26 +151,26 @@ News.getByHot = function(callback) {
       }, {
         limit: 13
       }).sort({
-        commentCount: -1
-      }).toArray(function(err, news) {
+        Count: -1
+      }).toArray(function(err, xinwen) {
         mongodb.close();
         if (err) {
           return callback(err);
         }
-        callback(null, news);
+        callback(null, xinwen);
       });
     });
   });
 };
 
-News.getByTime = function(callback) {
+xinwen.zuixin = function(callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {
       return callback(err); //错误，返回 err 信息
     }
-    //读取 news 集合
-    db.collection('news', function(err, collection) {
+    //读取 xinwen 集合
+    db.collection('xinwen', function(err, collection) {
       if (err) {
         mongodb.close();
         return callback(err); //错误，返回 err 信息
@@ -181,26 +181,26 @@ News.getByTime = function(callback) {
         limit: 4
       }).sort({
         time: -1
-      }).toArray(function(err, news) {
+      }).toArray(function(err, xinwen) {
         mongodb.close();
         if (err) {
           return callback(err);
         }
-        callback(null, news);
+        callback(null, xinwen);
       });
     });
   });
 };
 
 //更新一篇文章及其相关信息
-News.addTimes = function(name, callback) {
+xinwen.zengredu = function(name, callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {
       return callback(err);
     }
     //读取 posts 集合
-    db.collection('news', function(err, collection) {
+    db.collection('xinwen', function(err, collection) {
       if (err) {
         mongodb.close();
         return callback(err);
@@ -208,7 +208,7 @@ News.addTimes = function(name, callback) {
 
       collection.findOne({
         name: name
-      }, function(err, news) {
+      }, function(err, xinwen) {
         if (err) {
           mongodb.close();
           return callback(err);
@@ -218,7 +218,7 @@ News.addTimes = function(name, callback) {
           name: name
         }, {
           $set: {
-            commentCount: news.commentCount + 1
+            commentCount: xinwen.commentCount + 1
           }
         }, function(err) {
           mongodb.close();
@@ -232,14 +232,14 @@ News.addTimes = function(name, callback) {
   });
 }
 
-News.passOrNot = function(name, pass, callback) {
+xinwen.tongguo = function(name, pass, callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {
       return callback(err);
     }
     //读取 posts 集合
-    db.collection('news', function(err, collection) {
+    db.collection('xinwen', function(err, collection) {
       if (err) {
         mongodb.close();
         return callback(err);
@@ -247,7 +247,7 @@ News.passOrNot = function(name, pass, callback) {
 
       collection.findOne({
         name: name
-      }, function(err, news) {
+      }, function(err, xinwen) {
         if (err) {
           mongodb.close();
           return callback(err);
@@ -271,14 +271,14 @@ News.passOrNot = function(name, pass, callback) {
   });
 }
 
-News.delete = function(name, callback) {
+xinwen.shanchu = function(name, callback) {
   //打开数据库
   mongodb.open(function(err, db) {
     if (err) {
       return callback(err);
     }
     //读取 posts 集合
-    db.collection('news', function(err, collection) {
+    db.collection('xinwen', function(err, collection) {
       if (err) {
         mongodb.close();
         return callback(err);

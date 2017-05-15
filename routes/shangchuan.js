@@ -1,11 +1,11 @@
 var path = require("path");
 var fs = require("fs");
 
-function upload (req, tag, name, callback) {
+exports.shangchuan = function(req, callback) {
   //get filename
   var filename = req.body.name + "." + req.files.file_data.type.split("/")[1];
   //copy file to a public directory
-  var targetPath = path.dirname(__filename).substring(0, path.dirname(__filename).lastIndexOf("/")) + '/public/updata/' + name + "/" + filename;
+  var targetPath = path.dirname(__filename).substring(0, path.dirname(__filename).lastIndexOf("/")) + '/public/updata/images/' + filename;
   //copy file
   // stream = fs.createWriteStream(path.join(upload_dir, name));
   const readStream = fs.createReadStream(req.files.file_data.path);
@@ -28,12 +28,3 @@ function upload (req, tag, name, callback) {
   })
 };
 
-exports.select = function(req, tag1, callback) {
-  upload(req, tag1, 'images', function(err) {
-    if (err) {
-      callback(err)
-    } else {
-      callback(null)
-    }
-  })
-}

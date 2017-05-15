@@ -1,53 +1,52 @@
-var crypto = require("crypto"); //加密算法
-
 var multipart = require("connect-multiparty");
 var async = require("async");
 
-var settings = require("../settings");
-var User = require("../models/user");
-var news = require("../models/news");
-var comment = require("../models/comment");
+var yonghu = require("../models/yonghu");
+var xinwen = require("../models/xinwen");
+var pinglun = require("../models/pinglun");
 
-var upload = require("./upload");
+var shangchuan = require("./shangchuan");
 
 module.exports = function(app) {
 
   //app.get('/', checkStatus.checkNotLogin);
   app.get("/", function(req, res) {
-    var user = req.session.user?req.session.user:{null:true};
+    var user = req.session.user ? req.session.user : {
+      null: true
+    };
     // an example using an object instead of an array
     async.waterfall([
-      function(callback) {
-        news.getByHot(function(err, n) {
-          if (err) {
-            callback("请重试", null);
+      function(cb) {
+        xinwen.redu(function(e, n) {
+          if (e) {
+            cb("请重试", null);
           } else {
-            callback(null, n);
+            cb(null, n);
           }
         });
       },
-      function( Hotnews, callback) {
-        news.getByTime(function(err, n) {
-          if (err) {
-            callback("请重试", null);
+      function(paihang, cb) {
+        xinwen.zuixin(function(e, n) {
+          if (e) {
+            cb("请重试", null);
           } else {
-            callback(null, Hotnews, n);
+            cb(null, paihang, n);
           }
         });
       }
-    ], function(err, Hotnews, Timenews) {
-      if (err) {
+    ], function(e, paihang, zuixin) {
+      if (e) {
         var msg = {
           state: false,
-          info: err
+          info: e
         }; //注册失败返回主册页
         return res.send(msg);
       } else {
         res.render("index", {
-          Hotnews: Hotnews,
-          Timenews: Timenews,
+          Hotnews: paihang,
+          Timenews: zuixin,
           user: user,
-          typeList:["考研","工作","留学","校园活动","社会热点","爱豆"]
+          typeList: ["考研", "工作", "留学", "校园活动", "社会热点", "爱豆"]
         });
       }
     });
@@ -60,12 +59,10 @@ module.exports = function(app) {
 
   // app.post('/signin', checkStatus.checkNotLogin);
   app.post('/signin', function(req, res) {
-    //生成密码的 md5 值
-    var md5 = crypto.createHash('md5');
-    var password = md5.update(req.body.password).digest('hex');
+    var password = req.body.password
     //检查用户是否存在
-    User.get(req.body.name, function(err, user) {
-      if (!user||req.body.authority.indexOf(user.authority.toString())==-1) {
+    yonghu.mingcheng(req.body.name, function(e, yonghu) {
+      if (!yonghu || req.body.authority.indexOf(yonghu.authority.toString()) == -1) {
         var msg = {
           state: false,
           info: "用户不存在"
@@ -74,7 +71,7 @@ module.exports = function(app) {
         //用户不存在则跳转到登录页
       }
       //检查密码是否一致
-      if (user.password != password) {
+      if (yonghu.password != password) {
         var msg = {
           state: false,
           info: "密码错误"
@@ -83,11 +80,11 @@ module.exports = function(app) {
         //密码错误则跳转到登录页
       }
       //用户名密码都匹配后，将用户信息存入 session
-      req.session.user = user;
+      req.session.user = yonghu;
       var msg = {
         state: true,
         info: "sussess",
-        user: user
+        user: yonghu
       };
       return res.send(msg);
     });
@@ -105,11 +102,9 @@ module.exports = function(app) {
       };
       return res.send(msg);
     }
-    // 生成密码的 md5 值
-    var md5 = crypto.createHash('md5');
-    var password = md5.update(req.body.password).digest('hex');
+    var password = req.body.password;
 
-    var newUser = new User({
+    var xin_youhu = new yonghu({
       name: req.body.name,
       password: password,
       email: req.body.email,
@@ -117,7 +112,7 @@ module.exports = function(app) {
     });
 
     //检查用户名是否已经存在
-    User.get(newUser.name, function(err, user) {
+    yonghu.yonghuming(xin_youhu.name, function(e, user) {
       if (user) {
         var msg = {
           state: false,
@@ -126,8 +121,8 @@ module.exports = function(app) {
         return res.send(msg);
       }
       //如果不存在则新增用户
-      newUser.save(function(err, user) {
-        if (err) {
+      yonghu.save(function(e, user) {
+        if (e) {
           var msg = {
             state: false,
             info: "请重试"
@@ -144,115 +139,122 @@ module.exports = function(app) {
     });
   });
 
-  app.get("/category",function(req, res){
-    let type=parseInt(req.query.type);
-    if(type<1||type>6){
-      res.render("404",{});
-    }else{
-      let user = req.session.user?req.session.user:{null:true};
+  app.get("/category", function(req, res) {
+    let type = parseInt(req.query.type);
+    if (type < 1 || type > 6) {
+      res.render("404", {});
+    } else {
+      let user = req.session.user ? req.session.user : {
+        null: true
+      };
       async.waterfall([
-        function(callback) {
-          news.getByType(type,function(err, n) {
-            if (err) {
-              callback("请重试", null);
+        function(cb) {
+          xinwen.leixing(type, function(e, n) {
+            if (e) {
+              cb("请重试", null);
             } else {
-              callback(null, n);
+              cb(null, n);
             }
           });
         }
-      ], function(err,Typenews) {
-        if (err) {
+      ], function(e, leixing) {
+        if (e) {
           var msg = {
             state: false,
-            info: err
+            info: e
           }; //注册失败返回主册页
           return res.send(msg);
         } else {
           res.render("category", {
-            Typenews: Typenews,
+            Typenews: leixing,
             user: user,
-            typeList:["考研","工作","留学","校园活动","社会热点","爱豆"],
-            type:type
+            typeList: ["考研", "工作", "留学", "校园活动", "社会热点", "爱豆"],
+            type: type
           });
         }
       });
     }
   });
 
-  app.get("/search",function(req,res){
-    let key=req.query.search;
-    let user = req.session.user?req.session.user:{null:true};
+  app.get("/search", function(req, res) {
+    let key = req.query.search;
+    let yonghu = req.session.user ? req.session.user : {
+      null: true
+    };
     async.waterfall([
-      function(callback) {
-        news.getByName_more(key,1,function(err, n) {
-          if (err) {
-            callback("请重试", null);
+      function(cb) {
+        xinwen.xinwenmingcheng(key, 1, function(e, n) {
+          if (e) {
+            cb("请重试", null);
           } else {
-            callback(null, n);
+            cb(null, n);
           }
         });
       }
-    ], function(err,news) {
-      if (err) {
+    ], function(e, xinwen) {
+      if (e) {
         var msg = {
           state: false,
-          info: err
+          info: e
         }; //注册失败返回主册页
         return res.send(msg);
       } else {
         res.render("search-result", {
-          news: news,
-          user: user,
-          typeList:["考研","工作","留学","校园活动","社会热点","爱豆"]
+          news: xinwen,
+          user: yonghu,
+          typeList: ["考研", "工作", "留学", "校园活动", "社会热点", "爱豆"]
         });
       }
     });
   });
 
-  app.get("/news",function(req,res){
-    let newsname=req.query.name;
-    let user = req.session.user?req.session.user:{null:true};
+  app.get("/news", function(req, res) {
+    let newsname = req.query.name;
+    let user = req.session.user ? req.session.user : {
+      null: true
+    };
     async.waterfall([
-      function(callback) {
-        news.getByName(newsname,1,function(err, n) {
-          if (err) {
-            callback("请重试", null);
+      function(cb) {
+        xinwen.mingcheng(newsname, 1, function(e, n) {
+          if (e) {
+            cb("请重试", null);
           } else {
-            callback(null, n);
+            cb(null, n);
           }
         });
-      },function(thenews,callback) {
-        comment.getByNewsName(newsname,function(err, c) {
-          if (err) {
-            callback("请重试", null);
+      },
+      function(thenews, cb) {
+        pinglun.xinwenmingcheng(newsname, function(e, c) {
+          if (e) {
+            cb("请重试", null);
           } else {
-            callback(null,thenews,c);
+            cb(null, thenews, c);
           }
         });
       }
-    ], function(err,thenews,comments) {
-      if (err) {
+    ], function(e, thenews, comments) {
+      if (e) {
         var msg = {
           state: false,
-          info: err
+          info: e
         }; //注册失败返回主册页
         return res.send(msg);
       } else {
-        news.addTimes(newsname,function(err){
-          if (err) {
-          var msg = {
-            state: false,
-            info: err
-          };
-          return res.send(msg);
-        }else{
-          res.render("news", {
-            news: thenews,
-            comments: comments,
-            user: user,
-            typeList:["考研","工作","留学","校园活动","社会热点","爱豆"]
-          });
-        }
+        xinwen.zengredu(newsname, function(e) {
+          if (e) {
+            var msg = {
+              state: false,
+              info: e
+            };
+            return res.send(msg);
+          } else {
+            res.render("news", {
+              news: thenews,
+              comments: comments,
+              user: user,
+              typeList: ["考研", "工作", "留学", "校园活动", "社会热点", "爱豆"]
+            });
+          }
         });
       }
     });
@@ -261,31 +263,31 @@ module.exports = function(app) {
   /*
     admin
   */
-  app.get("/admin-sign",function(req,res){
+  app.get("/admin-sign", function(req, res) {
     res.render("admin-sign", {});
   });
 
-  app.post("/getUser",function(req,res){
-    let user=req.session.user;
-    let authority=parseInt(req.body.authority);
-    if(!user){
+  app.post("/getUser", function(req, res) {
+    let user = req.session.user;
+    let authority = parseInt(req.body.authority);
+    if (!user) {
       var msg = {
         state: false,
         info: '没有权限'
       }; //注册失败返回主册页
       return res.send(msg);
-    }else if (user.authority!=2&&user.authority!=1){
+    } else if (user.authority != 2 && user.authority != 1) {
       var msg = {
         state: false,
         info: '没有权限'
       }; //注册失败返回主册页
       return res.send(msg);
-    }else{
-      User.getAll(authority,function(err,users){
-        if(err){
+    } else {
+      yonghu.suoyou(authority, function(e, users) {
+        if (e) {
           var msg = {
             state: false,
-            info: err
+            info: e
           }; //注册失败返回主册页
           return res.send(msg);
         }
@@ -299,44 +301,43 @@ module.exports = function(app) {
   });
 
   app.get("/upload", function(req, res) {
-    let user=req.session.user;
-    if(!user){
+    let user = req.session.user;
+    if (!user) {
       res.redirect('/');
-    }else if (user.authority!=1){
+    } else if (user.authority != 1) {
       res.redirect('/');
-    }else{
+    } else {
       res.render("upload", {
-        user:user
+        user: user
       })
     }
   });
 
   // app.post('/upload-file', checkStatus.checkLogin);
   app.post("/upload-file", multipart(), function(req, res) {
-    console.log(req.files.file_data.type);
     async.waterfall([
-      function(callback) {
-        news.getByName(req.body.name,0,function(err, music) {
-          if (music) {
-            callback("歌曲已存在");
-          } else if (err) {
-            callback("请重试");
+      function(cb) {
+        xinwen.mingcheng(req.body.name, 0, function(e, xinwen) {
+          if (xinwen) {
+            cb("歌曲已存在");
+          } else if (e) {
+            cb("请重试");
           } else {
-            callback(null);
+            cb(null);
           }
         })
       },
-      function(callback) {
+      function(cb) {
         var fileData = req.files.file_data;
-          upload.select(req, 0, function(err) {
-            if (err) {
-              callback(err)
-            } else {
-              callback(null)
-            }
-          });
+        shangchuan.shangchuan(req, function(e) {
+          if (e) {
+            cb(e)
+          } else {
+            cb(null)
+          }
+        });
       },
-      function(callback) {
+      function(cb) {
         var type = 3;
         //摇滚1 民谣2 流行3
         switch (req.body.type) {
@@ -360,24 +361,24 @@ module.exports = function(app) {
             break;
         }
         //音乐名、作者、类型、次数
-        var newNews = new news({
+        var xin_xinwen = new xinwen({
           name: req.body.name,
           time: req.body.date,
           content: req.body.content,
           type: type
         });
         //如果不存在则新增用户
-        newNews.save(function(err, music) {
-          if (err) {
-            callback("请重试");
+        xin_xinwen.baocun(function(e, xinwen) {
+          if (e) {
+            cb("请重试");
           }
-          callback(null); //成功后返回
+          cb(null); //成功后返回
         });
       }
-    ], function(err, result) {
-      if (err) {
+    ], function(e, result) {
+      if (e) {
         var msg = {
-          error: err
+          error: e
         }; //注册失败返回主册页
       } else {
         var msg = {
@@ -390,24 +391,23 @@ module.exports = function(app) {
   });
 
   app.get("/change", function(req, res) {
-    let user=req.session.user;
-    if(!user){
+    let user = req.session.user;
+    if (!user) {
       res.redirect('/');
-    }else if (user.authority!=1){
+    } else if (user.authority != 1) {
       res.redirect('/');
-    }else{
-      let cname=req.query.name;
-      news.getByName(cname,1,function(err,n){
-        if (err) {
+    } else {
+      xinwen.mingcheng(req.query.name, 1, function(e, n) {
+        if (e) {
           var msg = {
             state: false,
-            info: err
+            info: e
           }; //注册失败返回主册页
           return res.send(msg);
         } else {
-            res.render("change", {
-              news: n
-            });
+          res.render("change", {
+            news: n
+          });
         }
       });
     }
@@ -415,16 +415,16 @@ module.exports = function(app) {
 
   app.post("/change", function(req, res) {
     async.waterfall([
-      function(callback) {
-        news.delete(req.body.name,function(err, music) {
-          if (err) {
-            callback("请重试");
+      function(cb) {
+        xinwen.shanchu(req.body.name, function(e, xinwen) {
+          if (e) {
+            cb("请重试");
           } else {
-            callback(null);
+            cb(null);
           }
         })
       },
-      function(callback) {
+      function(cb) {
         var type = 3;
         //摇滚1 民谣2 流行3
         switch (req.body.type) {
@@ -447,25 +447,23 @@ module.exports = function(app) {
             type = 6;
             break;
         }
-        //音乐名、作者、类型、次数
-        var newNews = new news({
+        var xin_xinwen = new xinwen({
           name: req.body.name,
           time: req.body.date,
           content: req.body.content,
           type: type
         });
-        //如果不存在则新增用户
-        newNews.save(function(err, music) {
-          if (err) {
-            callback("请重试");
+        xin_xinwen.baocun(function(e, xinwen) {
+          if (e) {
+            cb("请重试");
           }
-          callback(null); //成功后返回
+          cb(null); //成功后返回
         });
       }
-    ], function(err, result) {
-      if (err) {
+    ], function(e, result) {
+      if (e) {
         var msg = {
-          error: err
+          error: e
         }; //注册失败返回主册页
       } else {
         var msg = {
@@ -479,25 +477,24 @@ module.exports = function(app) {
 
 
   app.post('/delete', function(req, res) {
-    let user=req.session.user;
-    let type=req.body.type;
-    if(!user||user.authority==0){
+    let user = req.session.user;
+    let type = req.body.type;
+    if (!user || user.authority == 0) {
       var msg = {
         state: false,
         info: "没有权限!!!"
       };
       return res.send(msg);
-    }else{
-      if(type=="news"){
-        var dename=req.body.name;
-        news.delete(dename,function(err){
-          if(err){
+    } else {
+      if (type == "news") {
+        xinwen.shanchu(req.body.name, function(e) {
+          if (e) {
             var msg = {
               state: false,
               info: "error"
             };
             return res.send(msg);
-          }else{
+          } else {
             var msg = {
               state: true,
               info: "已删除该新闻！"
@@ -505,17 +502,15 @@ module.exports = function(app) {
             return res.send(msg);
           }
         })
-      }else if (type=="comment") {
-        var deid=req.body.id;
-        console.log(deid);
-        comment.delete(deid,function(err){
-          if(err){
+      } else if (type == "comment") {
+        pinglun.shanchu(req.body.id, function(e) {
+          if (e) {
             var msg = {
               state: false,
               info: "error"
             };
             return res.send(msg);
-          }else{
+          } else {
             var msg = {
               state: true,
               info: "已删除该评论！"
@@ -523,16 +518,15 @@ module.exports = function(app) {
             return res.send(msg);
           }
         })
-      }else if (type=="user") {
-        var dename=req.body.name;
-        User.delete(dename,function(err){
-          if(err){
+      } else if (type == "user") {
+        yonghu.shanchu(req.body.name, function(e) {
+          if (e) {
             var msg = {
               state: false,
               info: "error"
             };
             return res.send(msg);
-          }else{
+          } else {
             var msg = {
               state: true,
               info: "已删除！"
@@ -544,23 +538,23 @@ module.exports = function(app) {
     }
   });
 
-  app.post("/addAdmin",function(req,res){
-    let user=req.session.user;
-    if(!user||user.authority!=2){
+  app.post("/addAdmin", function(req, res) {
+    let user = req.session.user;
+    if (!user || user.authority != 2) {
       var msg = {
         state: false,
         info: "没有权限!!!"
       };
       return res.send(msg);
-    }else{
-      User.giveAdmin(req.body.name,function(err){
-        if(err){
+    } else {
+      yonghu.zengquanxian(req.body.name, function(e) {
+        if (e) {
           var msg = {
             state: false,
             info: "error"
           };
           return res.send(msg);
-        }else{
+        } else {
           var msg = {
             state: true,
             info: "已添加！"
@@ -572,55 +566,55 @@ module.exports = function(app) {
   });
 
   app.get("/admin", function(req, res) {
-    let user=req.session.user;
-    if(!user){
+    let user = req.session.user;
+    if (!user) {
       res.redirect('/');
-    }else if (user.authority!=1){
+    } else if (user.authority != 1) {
       res.redirect('/');
-    }else{
+    } else {
       async.waterfall([
-        function(callback) {
-          news.getByName_more('',1,function(err, n) {
-            if (err) {
-              callback("请重试", null);
+        function(cb) {
+          xinwen.mingcheng_1('', 1, function(e, n) {
+            if (e) {
+              cb("请重试", null);
             } else {
-              callback(null, n);
+              cb(null, n);
             }
           });
         },
-        function(thenews,callback){
-          User.getAll(0,function(err, n) {
-            if (err) {
-              callback("请重试", null);
+        function(xinwen, cb) {
+          yonghu.quanbu(0, function(e, n) {
+            if (e) {
+              cb("请重试", null);
             } else {
-              callback(null,thenews,n);
+              cb(null, xinwen, n);
             }
           });
         },
-        function(thenews,users,callback){
-          comment.getAll(function(err, c) {
-            if (err) {
-              callback("请重试", null);
+        function(xinwen, yonghu, cb) {
+          pinglun.quanbu(function(e, c) {
+            if (e) {
+              cb("请重试", null);
             } else {
-              callback(null,thenews,users,c);
+              cb(null, xinwen, yonghu, c);
             }
           });
         }
-      ], function(err,thenews,users,comments) {
-        if (err) {
+      ], function(e, xinwen, yonghu, pinglun) {
+        if (e) {
           var msg = {
             state: false,
-            info: err
+            info: e
           }; //注册失败返回主册页
           return res.send(msg);
         } else {
-            res.render("admin", {
-              user: user,
-              news: thenews,
-              users: users,
-              comments: comments,
-              typeList:["考研","工作","留学","校园活动","社会热点","爱豆"]
-            });
+          res.render("admin", {
+            user: user,
+            news: xinwen,
+            users: yonghu,
+            comments: pinglun,
+            typeList: ["考研", "工作", "留学", "校园活动", "社会热点", "爱豆"]
+          });
         }
       });
     }
@@ -628,59 +622,58 @@ module.exports = function(app) {
 
 
   app.get("/examine", function(req, res) {
-    let user=req.session.user;
-    if(!user){
+    let user = req.session.user;
+    if (!user) {
       res.redirect('/');
-    }else if (user.authority!=2){
+    } else if (user.authority != 2) {
       res.redirect('/');
-    }else{
+    } else {
       async.waterfall([
-        function(callback) {
-          news.getByName_more('',0,function(err, n) {
-            if (err) {
-              callback("请重试", null);
+        function(cb) {
+          xinwen.mingcheng_1('', 0, function(e, n) {
+            if (e) {
+              cb("请重试", null);
             } else {
-              callback(null, n);
+              cb(null, n);
             }
           });
         }
-      ], function(err,thenews) {
-        if (err) {
+      ], function(e, xinwen) {
+        if (e) {
           var msg = {
             state: false,
-            info: err
+            info: e
           }; //注册失败返回主册页
           return res.send(msg);
         } else {
-            res.render("examine", {
-              news: thenews,
-              typeList:["考研","工作","留学","校园活动","社会热点","爱豆"]
-            });
+          res.render("examine", {
+            news: xinwen,
+            typeList: ["考研", "工作", "留学", "校园活动", "社会热点", "爱豆"]
+          });
         }
       });
     }
   });
 
   app.post('/pass', function(req, res) {
-    let user=req.session.user;
-    if(!user||user.authority!=2){
+    let user = req.session.user;
+    if (!user || user.authority != 2) {
       var msg = {
         state: false,
         info: "没有权限!!!"
       };
       return res.send(msg);
-    }else{
-      var dename=req.body.name;
-      var pass=req.body.pass;
-      if(pass==1){
-        news.passOrNot(dename,1,function(err){
-          if(err){
+    } else {
+      var pass = req.body.pass;
+      if (pass == 1) {
+        xinwen.tongguo(req.body.name, 1, function(e) {
+          if (e) {
             var msg = {
               state: false,
               info: "error"
             };
             return res.send(msg);
-          }else{
+          } else {
             var msg = {
               state: true,
               info: "已审核该新闻！"
@@ -688,15 +681,15 @@ module.exports = function(app) {
             return res.send(msg);
           }
         });
-      }else{
-        news.delete(dename,function(err){
-          if(err){
+      } else {
+        xinwen.shanchu(req.body.name, function(e) {
+          if (e) {
             var msg = {
               state: false,
               info: "error"
             };
             return res.send(msg);
-          }else{
+          } else {
             var msg = {
               state: true,
               info: "已删除该新闻！"
@@ -709,24 +702,23 @@ module.exports = function(app) {
   });
 
   app.post('/comment', function(req, res) {
-    let user=req.session.user;
-    if(!user){
+    let user = req.session.user;
+    if (!user) {
       res.redirect('/sign');
-    }else{
+    } else {
       //增加评论
-      console.log(req.body);
-      let newsname=req.body.name;
-      let content=req.body.content;
-      var newComment=new comment({
-        news:newsname,
-        user:user,
-        content:content
+      let newsname = req.body.name;
+      let content = req.body.content;
+      var xin_pinglun = new pinglun({
+        news: newsname,
+        user: user,
+        content: content
       });
-      newComment.save(function(err, comment) {
-        if (err) {
+      xin_pinglun.baocun(function(e, comment) {
+        if (e) {
           var msg = {
             state: false,
-            info: err
+            info: e
           };
           return res.send(msg);
         }
@@ -739,25 +731,6 @@ module.exports = function(app) {
     }
   });
 
-  // app.post('/getByName', checkStatus.checkLogin);
-  // app.post("/getByName", function(req, res) {
-  //   Music.getByName_more(req.body.name, function(err, musics) {
-  //     if (err) {
-  //       var msg = {
-  //         state: false,
-  //         info: err
-  //       };
-  //     } else {
-  //       var msg = {
-  //         state: true,
-  //         info: musics
-  //       };
-  //       return res.send(msg);
-  //     }
-  //   });
-  // });
-
-  // app.get('/logout', checkStatus.checkLogin);
   app.get("/logout", function(req, res) {
     req.session.user = null;
     res.redirect("/");
