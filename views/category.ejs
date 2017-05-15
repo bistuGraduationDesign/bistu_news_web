@@ -181,8 +181,8 @@
     <script>
       //dataset
       var dataset={
-        User:<%- JSON.stringify(user) %>,
-        Typenews:<%- JSON.stringify(Typenews) %>,
+        User:<%- JSON.stringify(yonghu) %>,
+        Typenews:<%- JSON.stringify(xinwen) %>,
         typelist:<%- JSON.stringify(typeList) %>
       };
     </script>
@@ -228,7 +228,6 @@
                               <ul class="posted__icon">
                                   <li>
                                       <span>
-                                      <i class="icon-eye"></i>${news.commentCount}
                                   </span>
                                   </li>
                               </ul>
@@ -255,7 +254,6 @@
                           <ul class="posted__icon">
                               <li>
                                   <span>
-                                  <i class="icon-eye"></i>${typenews[0].commentCount}
                               </span>
                               </li>
                           </ul>

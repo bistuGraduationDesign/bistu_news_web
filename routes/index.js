@@ -1,68 +1,50 @@
-var multipart = require("connect-multiparty");
-var async = require("async");
+var crypto = require("crypto"); //加密
+var multipart = require("connect-multiparty"); //并行上传
+var async = require("async"); //控制流
 
-var yonghu = require("../models/yonghu");
-var xinwen = require("../models/xinwen");
-var pinglun = require("../models/pinglun");
+var users = require("../models/users"); //用户
+var news = require("../models/news"); //新闻
+var comments = require("../models/comments"); //评论
 
-var shangchuan = require("./shangchuan");
+var shangchuan = require("./shangchuan"); //上传
 
 module.exports = function(app) {
-
-  //app.get('/', checkStatus.checkNotLogin);
+  //首页
   app.get("/", function(req, res) {
-    var user = req.session.user ? req.session.user : {
+    //用户在会话中，则用户为会话中用户；用户不在会话中，用户为空
+    var yonghu = req.session.yonghu ? req.session.yonghu : {
       null: true
     };
-    // an example using an object instead of an array
-    async.waterfall([
-      function(cb) {
-        xinwen.redu(function(e, n) {
-          if (e) {
-            cb("请重试", null);
-          } else {
-            cb(null, n);
-          }
-        });
-      },
-      function(paihang, cb) {
-        xinwen.zuixin(function(e, n) {
-          if (e) {
-            cb("请重试", null);
-          } else {
-            cb(null, paihang, n);
-          }
-        });
-      }
-    ], function(e, paihang, zuixin) {
-      if (e) {
+
+    news.lastest(function(e, n) {
+      if (e) { //错了
         var msg = {
-          state: false,
-          info: e
+          state: false, //状态
+          info: "请重试" //信息
         }; //注册失败返回主册页
-        return res.send(msg);
-      } else {
+        return res.send(msg); //返回信息
+      } else { //对
         res.render("index", {
-          Hotnews: paihang,
-          Timenews: zuixin,
-          user: user,
+          Timenews: n,
+          yonghu: yonghu,
           typeList: ["考研", "工作", "留学", "校园活动", "社会热点", "爱豆"]
         });
       }
     });
   });
 
-  // app.get('/sign', checkStatus.checkNotLogin);
+  //登陆
   app.get("/sign", function(req, res) {
     res.render("sign", {});
   });
-
-  // app.post('/signin', checkStatus.checkNotLogin);
+  //登陆请求
   app.post('/signin', function(req, res) {
-    var password = req.body.password
     //检查用户是否存在
-    yonghu.mingcheng(req.body.name, function(e, yonghu) {
-      if (!yonghu || req.body.authority.indexOf(yonghu.authority.toString()) == -1) {
+    var hmac = crypto.createHmac('sha1', "zhangyu");
+    var key = hmac.update(req.body.password).digest('hex');
+
+    users.search(req.body.name, function(e, yonghu) {
+      if (!yonghu) {
         var msg = {
           state: false,
           info: "用户不存在"
@@ -71,7 +53,7 @@ module.exports = function(app) {
         //用户不存在则跳转到登录页
       }
       //检查密码是否一致
-      if (yonghu.password != password) {
+      if (yonghu.key != key) {
         var msg = {
           state: false,
           info: "密码错误"
@@ -80,40 +62,39 @@ module.exports = function(app) {
         //密码错误则跳转到登录页
       }
       //用户名密码都匹配后，将用户信息存入 session
-      req.session.user = yonghu;
+      req.session.yonghu = yonghu;
       var msg = {
         state: true,
-        info: "sussess",
-        user: yonghu
+        info: "sussess"
       };
       return res.send(msg);
     });
   });
 
-  // app.post('/reg', checkStatus.checkNotLogin);
+  // 注册
   app.post('/reg', function(req, res) {
-    var password = req.body.password;
-    var password_re = req.body['passwordrepeat'];
     //检验用户两次输入的密码是否一致
-    if (password_re != password) {
+    if (req.body['passwordrepeat'] != req.body.password) {
       var msg = {
         state: false,
         info: "两次输入的密码是不一致"
       };
       return res.send(msg);
     }
-    var password = req.body.password;
 
-    var xin_youhu = new yonghu({
+    var hmac = crypto.createHmac('sha1', 'zhangyu');
+    var key = hmac.update(req.body.password).digest('hex');
+
+    var xin_yonghu = new users({
       name: req.body.name,
-      password: password,
+      key: key,
       email: req.body.email,
-      authority: 0
+      quanxian: 0
     });
 
     //检查用户名是否已经存在
-    yonghu.yonghuming(xin_youhu.name, function(e, user) {
-      if (user) {
+    users.search(xin_yonghu.name, function(e, yonghu) {
+      if (yonghu) {
         var msg = {
           state: false,
           info: "用户已存在"
@@ -121,7 +102,7 @@ module.exports = function(app) {
         return res.send(msg);
       }
       //如果不存在则新增用户
-      yonghu.save(function(e, user) {
+      xin_youhu.save(function(e, yonghu) {
         if (e) {
           var msg = {
             state: false,
@@ -129,7 +110,7 @@ module.exports = function(app) {
           }; //注册失败返回主册页
           return res.send(msg);
         }
-        req.session.user = user; //用户信息存入 session
+        req.session.yonghu = yonghu; //用户信息存入 session
         var msg = {
           state: true,
           info: "sussess"
@@ -140,34 +121,24 @@ module.exports = function(app) {
   });
 
   app.get("/category", function(req, res) {
-    let type = parseInt(req.query.type);
+    var type = parseInt(req.query.type); //接收类型参数
     if (type < 1 || type > 6) {
       res.render("404", {});
     } else {
-      let user = req.session.user ? req.session.user : {
+      var yonghu = req.session.yonghu ? req.session.yonghu : {
         null: true
       };
-      async.waterfall([
-        function(cb) {
-          xinwen.leixing(type, function(e, n) {
-            if (e) {
-              cb("请重试", null);
-            } else {
-              cb(null, n);
-            }
-          });
-        }
-      ], function(e, leixing) {
+      news.gainType(type, function(e, xinwen) {
         if (e) {
           var msg = {
             state: false,
-            info: e
+            info: "请重试"
           }; //注册失败返回主册页
           return res.send(msg);
         } else {
           res.render("category", {
-            Typenews: leixing,
-            user: user,
+            xinwen: xinwen,
+            yonghu: yonghu,
             typeList: ["考研", "工作", "留学", "校园活动", "社会热点", "爱豆"],
             type: type
           });
@@ -177,31 +148,22 @@ module.exports = function(app) {
   });
 
   app.get("/search", function(req, res) {
-    let key = req.query.search;
-    let yonghu = req.session.user ? req.session.user : {
+    var yonghu = req.session.yonghu ? req.session.yonghu : {
       null: true
     };
-    async.waterfall([
-      function(cb) {
-        xinwen.xinwenmingcheng(key, 1, function(e, n) {
-          if (e) {
-            cb("请重试", null);
-          } else {
-            cb(null, n);
-          }
-        });
-      }
-    ], function(e, xinwen) {
+
+    news.hazy(req.query.search, 1, function(e, xinwen) {
       if (e) {
         var msg = {
           state: false,
-          info: e
+          info: "请重试"
         }; //注册失败返回主册页
         return res.send(msg);
       } else {
+        console.log(xinwen);
         res.render("search-result", {
-          news: xinwen,
-          user: yonghu,
+          xinwen: xinwen,
+          yonghu: yonghu,
           typeList: ["考研", "工作", "留学", "校园活动", "社会热点", "爱豆"]
         });
       }
@@ -209,30 +171,29 @@ module.exports = function(app) {
   });
 
   app.get("/news", function(req, res) {
-    let newsname = req.query.name;
-    let user = req.session.user ? req.session.user : {
+    var yonghu = req.session.yonghu ? req.session.yonghu : {
       null: true
     };
     async.waterfall([
       function(cb) {
-        xinwen.mingcheng(newsname, 1, function(e, n) {
+        news.accurate(req.query.name, 1, function(e, x) {
           if (e) {
             cb("请重试", null);
           } else {
-            cb(null, n);
+            cb(null, x);
           }
         });
       },
-      function(thenews, cb) {
-        pinglun.xinwenmingcheng(newsname, function(e, c) {
+      function(x, cb) {
+        comments.get(req.query.name, function(e, p) {
           if (e) {
             cb("请重试", null);
           } else {
-            cb(null, thenews, c);
+            cb(null, x, p);
           }
         });
       }
-    ], function(e, thenews, comments) {
+    ], function(e, x, p) {
       if (e) {
         var msg = {
           state: false,
@@ -240,21 +201,12 @@ module.exports = function(app) {
         }; //注册失败返回主册页
         return res.send(msg);
       } else {
-        xinwen.zengredu(newsname, function(e) {
-          if (e) {
-            var msg = {
-              state: false,
-              info: e
-            };
-            return res.send(msg);
-          } else {
-            res.render("news", {
-              news: thenews,
-              comments: comments,
-              user: user,
-              typeList: ["考研", "工作", "留学", "校园活动", "社会热点", "爱豆"]
-            });
-          }
+        console.log(p);
+        res.render("news", {
+          xinwen: x,
+          pinglun: p,
+          yonghu: yonghu,
+          typeList: ["考研", "工作", "留学", "校园活动", "社会热点", "爱豆"]
         });
       }
     });
@@ -268,7 +220,7 @@ module.exports = function(app) {
   });
 
   app.post("/getUser", function(req, res) {
-    let user = req.session.user;
+    let user = req.session.yonghu;
     let authority = parseInt(req.body.authority);
     if (!user) {
       var msg = {
@@ -283,7 +235,7 @@ module.exports = function(app) {
       }; //注册失败返回主册页
       return res.send(msg);
     } else {
-      yonghu.suoyou(authority, function(e, users) {
+      user.allusers(authority, function(e, users) {
         if (e) {
           var msg = {
             state: false,
@@ -301,7 +253,7 @@ module.exports = function(app) {
   });
 
   app.get("/upload", function(req, res) {
-    let user = req.session.user;
+    let user = req.session.yonghu;
     if (!user) {
       res.redirect('/');
     } else if (user.authority != 1) {
@@ -317,7 +269,7 @@ module.exports = function(app) {
   app.post("/upload-file", multipart(), function(req, res) {
     async.waterfall([
       function(cb) {
-        xinwen.mingcheng(req.body.name, 0, function(e, xinwen) {
+        news.accurate(req.body.name, 0, function(e, xinwen) {
           if (xinwen) {
             cb("歌曲已存在");
           } else if (e) {
@@ -361,14 +313,14 @@ module.exports = function(app) {
             break;
         }
         //音乐名、作者、类型、次数
-        var xin_xinwen = new xinwen({
+        var xin_xinwen = new news({
           name: req.body.name,
           time: req.body.date,
           content: req.body.content,
           type: type
         });
         //如果不存在则新增用户
-        xin_xinwen.baocun(function(e, xinwen) {
+        xin_xinwen.save(function(e, xinwen) {
           if (e) {
             cb("请重试");
           }
@@ -391,13 +343,13 @@ module.exports = function(app) {
   });
 
   app.get("/change", function(req, res) {
-    let user = req.session.user;
+    let user = req.session.yonghu;
     if (!user) {
       res.redirect('/');
     } else if (user.authority != 1) {
       res.redirect('/');
     } else {
-      xinwen.mingcheng(req.query.name, 1, function(e, n) {
+      news.accurate(req.query.name, 1, function(e, n) {
         if (e) {
           var msg = {
             state: false,
@@ -416,7 +368,7 @@ module.exports = function(app) {
   app.post("/change", function(req, res) {
     async.waterfall([
       function(cb) {
-        xinwen.shanchu(req.body.name, function(e, xinwen) {
+        news.remove(req.body.name, function(e, xinwen) {
           if (e) {
             cb("请重试");
           } else {
@@ -447,13 +399,13 @@ module.exports = function(app) {
             type = 6;
             break;
         }
-        var xin_xinwen = new xinwen({
+        var xin_xinwen = new news({
           name: req.body.name,
           time: req.body.date,
           content: req.body.content,
           type: type
         });
-        xin_xinwen.baocun(function(e, xinwen) {
+        xin_xinwen.save(function(e, xinwen) {
           if (e) {
             cb("请重试");
           }
@@ -477,7 +429,7 @@ module.exports = function(app) {
 
 
   app.post('/delete', function(req, res) {
-    let user = req.session.user;
+    let user = req.session.yonghu;
     let type = req.body.type;
     if (!user || user.authority == 0) {
       var msg = {
@@ -487,7 +439,7 @@ module.exports = function(app) {
       return res.send(msg);
     } else {
       if (type == "news") {
-        xinwen.shanchu(req.body.name, function(e) {
+        news.removwe(req.body.name, function(e) {
           if (e) {
             var msg = {
               state: false,
@@ -503,7 +455,7 @@ module.exports = function(app) {
           }
         })
       } else if (type == "comment") {
-        pinglun.shanchu(req.body.id, function(e) {
+        comments.remove(req.body.id, function(e) {
           if (e) {
             var msg = {
               state: false,
@@ -519,7 +471,7 @@ module.exports = function(app) {
           }
         })
       } else if (type == "user") {
-        yonghu.shanchu(req.body.name, function(e) {
+        users.remove(req.body.name, function(e) {
           if (e) {
             var msg = {
               state: false,
@@ -539,7 +491,7 @@ module.exports = function(app) {
   });
 
   app.post("/addAdmin", function(req, res) {
-    let user = req.session.user;
+    let user = req.session.yonghu;
     if (!user || user.authority != 2) {
       var msg = {
         state: false,
@@ -547,7 +499,7 @@ module.exports = function(app) {
       };
       return res.send(msg);
     } else {
-      yonghu.zengquanxian(req.body.name, function(e) {
+      user.promote(req.body.name, function(e) {
         if (e) {
           var msg = {
             state: false,
@@ -566,7 +518,7 @@ module.exports = function(app) {
   });
 
   app.get("/admin", function(req, res) {
-    let user = req.session.user;
+    let user = req.session.yonghu;
     if (!user) {
       res.redirect('/');
     } else if (user.authority != 1) {
@@ -574,7 +526,7 @@ module.exports = function(app) {
     } else {
       async.waterfall([
         function(cb) {
-          xinwen.mingcheng_1('', 1, function(e, n) {
+          news.hazy('', 1, function(e, n) {
             if (e) {
               cb("请重试", null);
             } else {
@@ -583,7 +535,7 @@ module.exports = function(app) {
           });
         },
         function(xinwen, cb) {
-          yonghu.quanbu(0, function(e, n) {
+          user.allusers(0, function(e, n) {
             if (e) {
               cb("请重试", null);
             } else {
@@ -592,7 +544,7 @@ module.exports = function(app) {
           });
         },
         function(xinwen, yonghu, cb) {
-          pinglun.quanbu(function(e, c) {
+          comments.allComments(function(e, c) {
             if (e) {
               cb("请重试", null);
             } else {
@@ -622,7 +574,7 @@ module.exports = function(app) {
 
 
   app.get("/examine", function(req, res) {
-    let user = req.session.user;
+    let user = req.session.yonghu;
     if (!user) {
       res.redirect('/');
     } else if (user.authority != 2) {
@@ -630,7 +582,7 @@ module.exports = function(app) {
     } else {
       async.waterfall([
         function(cb) {
-          xinwen.mingcheng_1('', 0, function(e, n) {
+          news.hazy('', 0, function(e, n) {
             if (e) {
               cb("请重试", null);
             } else {
@@ -656,7 +608,7 @@ module.exports = function(app) {
   });
 
   app.post('/pass', function(req, res) {
-    let user = req.session.user;
+    let user = req.session.yonghu;
     if (!user || user.authority != 2) {
       var msg = {
         state: false,
@@ -666,7 +618,7 @@ module.exports = function(app) {
     } else {
       var pass = req.body.pass;
       if (pass == 1) {
-        xinwen.tongguo(req.body.name, 1, function(e) {
+        news.accurate(req.body.name, 1, function(e) {
           if (e) {
             var msg = {
               state: false,
@@ -682,7 +634,7 @@ module.exports = function(app) {
           }
         });
       } else {
-        xinwen.shanchu(req.body.name, function(e) {
+        news.remove(req.body.name, function(e) {
           if (e) {
             var msg = {
               state: false,
@@ -702,19 +654,19 @@ module.exports = function(app) {
   });
 
   app.post('/comment', function(req, res) {
-    let user = req.session.user;
+    let user = req.session.yonghu;
     if (!user) {
       res.redirect('/sign');
     } else {
       //增加评论
       let newsname = req.body.name;
       let content = req.body.content;
-      var xin_pinglun = new pinglun({
+      var xin_pinglun = new comments({
         news: newsname,
         user: user,
         content: content
       });
-      xin_pinglun.baocun(function(e, comment) {
+      xin_pinglun.save(function(e, pinglun) {
         if (e) {
           var msg = {
             state: false,
@@ -732,7 +684,7 @@ module.exports = function(app) {
   });
 
   app.get("/logout", function(req, res) {
-    req.session.user = null;
+    req.session.yonghu = null;
     res.redirect("/");
   })
 }

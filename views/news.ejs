@@ -143,7 +143,7 @@
                                     </div>
                                   </div>
                                 </div> -->
-                                <a href="/category?type=<%=news.type%>" class="headline__category headline__category_orange"><%=typeList[(news.type-1)] %></a>
+                                <a href="/category?type=<%=xinwen.type%>" class="headline__category headline__category_orange"><%=typeList[(xinwen.type-1)] %></a>
                                 <p class="headline__category"></p>
                             </div>
                         </div>
@@ -205,9 +205,9 @@
     <script>
       //dataset
       var dataset={
-        User:<%- JSON.stringify(user) %>,
-        news:<%- JSON.stringify(news) %>,
-        comments:<%- JSON.stringify(comments) %>,
+        User:<%- JSON.stringify(yonghu) %>,
+        news:<%- JSON.stringify(xinwen) %>,
+        comments:<%- JSON.stringify(pinglun) %>,
         typelist:<%- JSON.stringify(typeList) %>
       };
       console.debug(dataset);

@@ -207,7 +207,7 @@
             </div>
             <!-- END title -->
             <div class="wrap wrap_gray pt20">
-                <div class="container" id="Hotnews">
+                <div class="container" id="timenews">
                 </div>
                 <!-- btn load-->
                 <div class="ajax_load">
@@ -257,9 +257,8 @@
     <!--dataset javascript-->
     <script type="text/javascript">
       var dataset={
-        User:<%- JSON.stringify(user) %>,
+        User:<%- JSON.stringify(yonghu) %>,
         Timenews:<%- JSON.stringify(Timenews)%>,
-        Hotnews:<%- JSON.stringify(Hotnews) %>,
         typelist:<%- JSON.stringify(typeList) %>
       };
 
@@ -271,7 +270,6 @@
     <script>
         $(document).ready(function() {
           user=dataset.User;
-          hotnews=dataset.Hotnews;
           timenews=dataset.Timenews;
           //if have userinfo change view
           if(!user.null){
@@ -290,9 +288,9 @@
             $('.time').eq(e).append(timenews[e].time.substring(0,10));
           }
           /**
-          HotNews
+          timenews
           */
-          var HotNewsNum=0;
+          var timenewsNum=0;
           function getType(typenum) {
             return dataset.typelist[typenum-1];
           }
@@ -317,7 +315,6 @@
                               <ul class="posted__icon">
                                   <li>
                                       <span>
-                                      <i class="icon-eye"></i>${news.commentCount}
                                   </span>
                                   </li>
                               </ul>
@@ -327,24 +324,23 @@
               </div>`);
           }
           //add content
-          $('#Hotnews').append("<div class='row' id='row1'></div>");
+          $('#timenews').append("<div class='row' id='row1'></div>");
           $('#row1').append(`
             <div class="col-sm-6">
               <div class="thumbnail thumbnail_big">
                   <div >
-                  <img src="updata/images/${hotnews[0].name}.jpeg" height="350" width="563" alt="News">
+                  <img src="updata/images/${timenews[0].name}.jpeg" height="350" width="563" alt="News">
                   <div class="caption thumbnail__caption" style="height:256px;">
                       <div class="news caption__news" style="height:186px">
-                          <p class="news__category yellow-line">${getType(hotnews[0].type)}</p>
-                          <a href="/news?name=${hotnews[0].name}" class="news__head">${hotnews[0].name}</a>
-                          <p class="news__desc">${hotnews[0].name}${hotnews[0].name}</p>
+                          <p class="news__category yellow-line">${getType(timenews[0].type)}</p>
+                          <a href="/news?name=${timenews[0].name}" class="news__head">${timenews[0].name}</a>
+                          <p class="news__desc">${timenews[0].name}${timenews[0].name}</p>
                       </div>
                       <div class="posted">
-                          <span class="posted__date">${hotnews[0].time.substring(0,10)}</span>
+                          <span class="posted__date">${timenews[0].time.substring(0,10)}</span>
                           <ul class="posted__icon">
                               <li>
                                   <span>
-                                  <i class="icon-eye"></i>${hotnews[0].commentCount}
                               </span>
                               </li>
                           </ul>
@@ -352,22 +348,22 @@
                   </div>
               </div>
           </div>`);
-          HotNewsNum++;
+          timenewsNum++;
           for(var i=1;i<5;i++){
-              addSmallBlock("row1",hotnews[i]);
-              HotNewsNum++;
-              if(HotNewsNum==hotnews.length){
+              addSmallBlock("row1",timenews[i]);
+              timenewsNum++;
+              if(timenewsNum==timenews.length){
                 break;
               }
           }
           var rowNum=1;
 
-          while (HotNewsNum<hotnews.length) {
-            $('#Hotnews').append(`<div class='row' id='row${++rowNum}'></div>`);
+          while (timenewsNum<timenews.length) {
+            $('#timenews').append(`<div class='row' id='row${++rowNum}'></div>`);
             for(var i=0;i<4;i++){
-                addSmallBlock("row"+rowNum,hotnews[HotNewsNum]);
-                HotNewsNum++;
-                if(HotNewsNum==hotnews.length){
+                addSmallBlock("row"+rowNum,timenews[timenewsNum]);
+                timenewsNum++;
+                if(timenewsNum==timenews.length){
                   break;
                 }
             }
