@@ -128,7 +128,7 @@
                     <!-- Tab panes -->
                     <div class="col-sm-8 tab-content tab-content_mob-p0">
                         <div role="tabpanel" class="tab-pane fade in active" id="home">
-                            <img src="updata/images/<%= Timenews[0].name%>.jpeg" alt="main img" class="tab-pane__img">
+                            <img src="../images/<%= Timenews[0].name%>.jpeg" alt="main img" class="tab-pane__img">
                             <div class="header_news_text tab-pane__block">
                                 <p class="tab-pane__category yel_line"></p>
                                 <a class="tab-pane__title" href="/news?name=<%= Timenews[0].name%>" ><%= Timenews[0].name%></a>
@@ -136,7 +136,7 @@
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="profile">
-                            <img src="updata/images/<%= Timenews[1].name%>.jpeg" alt="main img" class="tab-pane__img">
+                            <img src="../images/<%= Timenews[1].name%>.jpeg" alt="main img" class="tab-pane__img">
                             <div class="header_news_text tab-pane__block">
                                 <p class="tab-pane__category yel_line"></p>
                                 <a class="tab-pane__title" href="/news?name=<%= Timenews[1].name%>"><%= Timenews[1].name%></a>
@@ -144,7 +144,7 @@
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="messages">
-                            <img src="updata/images/<%= Timenews[2].name%>.jpeg" alt="main img" class="tab-pane__img">
+                            <img src="../images/<%= Timenews[2].name%>.jpeg" alt="main img" class="tab-pane__img">
                             <div class="header_news_text tab-pane__block">
                                 <p class="tab-pane__category yel_line"></p>
                                 <a class="tab-pane__title" href="/news?name=<%= Timenews[2].name%>"><%= Timenews[2].name%></a>
@@ -152,7 +152,7 @@
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="settings">
-                            <img src="updata/images/<%= Timenews[3].name%>.jpeg" alt="main img" class="tab-pane__img">
+                            <img src="../images/<%= Timenews[3].name%>.jpeg" alt="main img" class="tab-pane__img">
                             <div class="header_news_text tab-pane__block">
                                 <p class="tab-pane__category yel_line"></p>
                                 <a class="tab-pane__title" href="/news?name=<%= Timenews[3].name%>"><%= Timenews[3].name%></a>
@@ -300,7 +300,7 @@
                   <div class="thumbnail thumbnail_small">
                       <a href="/news?name=${news.name}" class="thumbnail__link">
                           <div style="width:270px;height:151px;">
-                          <img src="updata/images/${news.name}.jpeg" height="180" width="270" alt="News">
+                          <img src="../images/${news.name}.jpeg" height="180" width="270" alt="News">
                           </div>
                       </a>
                       <div class="caption thumbnail__caption">
@@ -329,7 +329,7 @@
             <div class="col-sm-6">
               <div class="thumbnail thumbnail_big">
                   <div >
-                  <img src="updata/images/${timenews[0].name}.jpeg" height="350" width="563" alt="News">
+                  <img src="../images/${timenews[0].name}.jpeg" height="350" width="563" alt="News">
                   <div class="caption thumbnail__caption" style="height:256px;">
                       <div class="news caption__news" style="height:186px">
                           <p class="news__category yellow-line">${getType(timenews[0].type)}</p>

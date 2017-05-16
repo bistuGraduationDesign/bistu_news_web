@@ -163,6 +163,45 @@ news.lastest = function(callback) {
   });
 };
 
+news.passOrNot = function(name, pass, callback) {
+  //打开数据库
+  mongodb.open(function(err, db) {
+    if (err) {
+      return callback(err);
+    }
+    //读取 posts 集合
+    db.collection('news', function(err, collection) {
+      if (err) {
+        mongodb.close();
+        return callback(err);
+      }
+
+      collection.findOne({
+        name: name
+      }, function(err, news) {
+        if (err) {
+          mongodb.close();
+          return callback(err);
+        }
+        //更新文章内容
+        collection.update({
+          name: name
+        }, {
+          $set: {
+            tongguo: pass
+          }
+        }, function(err) {
+          mongodb.close();
+          if (err) {
+            return callback(err);
+          }
+          callback(null);
+        });
+      });
+    });
+  });
+}
+
 news.remove = function(name, callback) {
   //打开数据库
   mongodb.open(function(err, db) {

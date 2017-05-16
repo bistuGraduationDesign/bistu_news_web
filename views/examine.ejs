@@ -218,7 +218,7 @@
         $.ajax({
           url: '/getUser',
           type: 'POST',
-          data: {authority:1}
+          data: {quanxian:1}
         })
         .done(function(res) {
           //render admin
@@ -239,7 +239,7 @@
           $.ajax({
             url: '/getUser',
             type: 'POST',
-            data: {authority:0}
+            data: {quanxian:0}
           })
           .done(function(res) {
             //render admin

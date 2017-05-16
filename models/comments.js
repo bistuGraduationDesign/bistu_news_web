@@ -73,7 +73,7 @@ comments.get = function(name, callback) {
 comments.remove = function(id, callback) {
 	//打开数据库
 	var BSON = require('bson');
-	var obj_id = BSON.ObjectID.createFromHexString(id);
+	var obj_id = BSON.ObjectID.createFromHexString(id);//哈希字符串
 	mongodb.open(function(err, db) {
 		if (err) {
 			return callback(err);

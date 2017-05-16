@@ -90,14 +90,16 @@
           type: 'POST',
           data: {
             name:name,
-            authority:[1,2],
+            quanxian:[1,2],
             password:password
           },
           success:function(res) {
             if(res.state){
-              let authority=res.user.authority;
+
+              console.log(res.info);
+              let quanxian=res.info.quanxian;
               let url=['/admin','/examine'];
-              location.href=url[authority-1];
+              location.href=url[quanxian-1];
             }else {
               alert(res.info);
             }
