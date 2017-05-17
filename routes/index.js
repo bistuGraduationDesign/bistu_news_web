@@ -290,7 +290,8 @@ module.exports = function(app) {
         } else {
           res.render("examine", {
             news: n,
-            typeList: ["考研", "工作", "留学", "校园活动", "社会热点", "爱豆"]
+            typeList: ["考研", "工作", "留学", "校园活动", "社会热点", "爱豆"],
+            user:user
           });
         }
       });
@@ -574,7 +575,7 @@ module.exports = function(app) {
       };
       return res.send(msg);
     } else {
-      user.promote(req.body.name, function(e) {
+      users.promote(req.body.name, function(e) {
         if (e) {
           var msg = {
             state: false,

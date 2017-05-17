@@ -15,6 +15,7 @@
         <link href="css/main.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="css/remodal.css">
         <link rel="stylesheet" href="css/remodal-default-theme.css">
+        <link rel="stylesheet" href="/css/font-awesome.min.css">
         <!-- END custom CSS -->
         <!--<![endif]-->
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -30,6 +31,27 @@
           width: 100%;
           display: none;
           text-align: center;
+        }
+        .myTabDiv{
+          height: 100%;
+          background-color: #303d4a;
+          padding: 0px !important;
+        }
+        #myTab li a{
+          margin: 0;
+          border: none;
+          border-radius: 0;
+          color: #fff;
+        }
+        #myTab li a:hover{
+        background-color: #242d37;
+        }
+        #myTab{
+          border: none;
+          text-align: center;
+        }
+        #myTab>li.active>a{
+          background-color: #242d37;
         }
         </style>
     </head>
@@ -47,85 +69,106 @@
                               </div>
                           </div>
                           <div class="col-sm-offset-2 col-md-offset-5 col-sm-6 col-md-4 hidden-xs">
-                              <div class="col-xs-4 col-sm-5"></div>
+                            <div class="col-xs-4 col-sm-5">
+                              <p class="userName"></p>
+                            </div>
+                            <div class="col-xs-6 col-sm-7">
+                                <div class="sign">
+                                    <a href="./sign"><span>sign</span></a>
+                                </div>
+                                <div class="logout" style="display:none">
+                                    <a href="./logout"><span>logout</span></a>
+                                </div>
+                            </div>
                           </div>
                       </div>
                     </div>
                   </div>
                 </header>
                 <!-- END header -->
-                <!-- content-->
-                <!-- title -->
-                <div class="wrap wrap_white">
-                  <div class="alert alert-success" role="alert" id='alertBox-success'>Success!</div>
-                  <div class="alert alert-danger" role="alert" id='alertBox-danger'>Error!</div>
-                    <div class="container title">
-                        <h1 class="title__h1 underscore">待审核</h1>
-                    </div>
+              <div class="row" style="height:100%;position:relative;">
+                <div class="alert alert-success" role="alert" id='alertBox-success'>Success!</div>
+                <div class="alert alert-danger" role="alert" id='alertBox-danger'>Error!</div>
+                <div class="myTabDiv col-md-1">
+                  <ul id="myTab" class="nav nav-tabs nav-pills nav-stacked ">
+                  	<li class="active"><a href="#news" data-toggle="tab"><i class="fa fa-list fa-lg"></i></a></li>
+                  	<li><a href="#admins" data-toggle="tab"><i class="fa fa-users fa-lg"></i></a></li>
+                  </ul>
                 </div>
-                <!-- END title -->
-                <div class="wrap wrap_gray pt20">
-                    <div class="container">
-                        <div class="row">
-                            <div class="wrap-thumbnail">
+                <div class="tab-content col-md-11" id="TabContent">
+                  <div id="news" class="tab-pane fade in active">
+                    <div class="wrap wrap_white">
+                        <div class="container title">
+                            <h1 class="title__h1 underscore">待审核</h1>
+                        </div>
+                    </div>
+                    <div class="wrap wrap_white pt20">
+                        <div class="container">
+                            <div class="row">
+                                <div class="wrap-thumbnail">
 
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- END content-->
-                <div class="wrap wrap_white">
-                  <div class="container title">
-                        <h1 class="title__h1 underscore">管理员管理</h1>
-                    </div>
-                </div>
-                <div class="wrap wrap_gray pt20">
-                    <div class="container wrap_white">
-                        <h3>现有管理员</h3>
-                        <table class="table table-bordered table-hover">
-                          <colgroup>
-                            <col style="width:10%">
-                            <col style="width:30%">
-                            <col style="width:30%">
-                            <col style="width:30%">
-                          </colgroup>
-                          <thead>
-                            <tr>
-                              <th>#</th>
-                              <th>管理员</th>
-                              <th>邮箱</th>
-                              <th>操作</th>
-                            </tr>
-                          </thead>
-                          <tbody id='admintable'>
+                  </div>
 
-                          </tbody>
-                        </table>
-                        <h3>新增管理员</h3>
-                        <table class="table table-bordered table-hover">
-                          <colgroup>
-                            <col style="width:10%">
-                            <col style="width:30%">
-                            <col style="width:30%">
-                            <col style="width:30%">
-                          </colgroup>
-                          <thead>
-                            <tr>
-                              <th>#</th>
-                              <th>用户名</th>
-                              <th>邮箱</th>
-                              <th>操作</th>
-                            </tr>
-                          </thead>
-                          <tbody id="usertable">
-
-                          </tbody>
-                        </table>
+                  <div id="admins" class="tab-pane fade in">
+                    <div class="wrap wrap_white">
+                      <div class="container title">
+                            <h1 class="title__h1 underscore">管理员管理</h1>
+                        </div>
                     </div>
+                    <div class="wrap wrap_white pt20">
+                        <div class="container wrap_white">
+                            <h3>现有管理员</h3>
+                            <table class="table table-bordered table-hover">
+                              <colgroup>
+                                <col style="width:10%">
+                                <col style="width:30%">
+                                <col style="width:30%">
+                                <col style="width:30%">
+                              </colgroup>
+                              <thead>
+                                <tr>
+                                  <th>#</th>
+                                  <th>管理员</th>
+                                  <th>邮箱</th>
+                                  <th>操作</th>
+                                </tr>
+                              </thead>
+                              <tbody id='admintable'>
+
+                              </tbody>
+                            </table>
+                            <h3>新增管理员</h3>
+                            <table class="table table-bordered table-hover">
+                              <colgroup>
+                                <col style="width:10%">
+                                <col style="width:30%">
+                                <col style="width:30%">
+                                <col style="width:30%">
+                              </colgroup>
+                              <thead>
+                                <tr>
+                                  <th>#</th>
+                                  <th>用户名</th>
+                                  <th>邮箱</th>
+                                  <th>操作</th>
+                                </tr>
+                              </thead>
+                              <tbody id="usertable">
+
+                              </tbody>
+                            </table>
+                        </div>
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
             <!-- Footer -->
-            <footer class="footer slate_gray">
+            <footer class="footer slate_gray" style="position:relative;">
                 <div class="container">
                     <div class="row">
                         <div class="col-sm-6">
@@ -172,11 +215,12 @@
     <script>
     var dataset={
       news:<%- JSON.stringify(news) %>,
-      typelist:<%- JSON.stringify(typeList) %>
+      typelist:<%- JSON.stringify(typeList) %>,
+      user:<%- JSON.stringify(user) %>
     };
     console.debug(dataset);
     </script>
-		<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+		<script src="js/jquery-3.1.1.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
     <script src="js/remodal.min.js"></script>
 		<!-- Custom JavaScript -->
@@ -197,7 +241,13 @@
       $(document).ready(function() {
         //render
         var news=dataset.news;
+        var user=dataset.user;
         var thumbnail=$('.wrap-thumbnail');
+        if(!user.null){
+          $(".sign").hide();
+          $(".logout").show();
+          $(".userName").text("hello,"+user.name);
+        }
         for (var i = 0; i < news.length; i++) {
           thumbnail.append(`
             <div class="thumbnail">

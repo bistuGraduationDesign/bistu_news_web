@@ -335,17 +335,17 @@ a:hover{
 /* 2.4. END List City */
 
 /* 2.4.5 sign*/
-.sign,.logout{
+.sign,.logout,.upload{
   line-height: 70px;
   text-align: center;
 }
-.sign span,.logout span{
+.sign span,.logout span,.upload span{
   color: #fff;
   border: solid #fff 1px;
   border-radius: 3px;
   padding: 5% 10% 5% 10%;
 }
-.sign span:hover,.logout span:hover{
+.sign span:hover,.logout span:hover,.upload span:hover{
   background-color: #fff;
   color: rgb(78,78,78);
 }
