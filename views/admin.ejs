@@ -93,11 +93,7 @@
                                     <a href="./logout"><span>logout</span></a>
                                 </div>
                             </div>
-                            <div class="col-xs-2 col-sm-5">
-                              <div class="upload">
-                                  <a href="./upload"><span>上传新闻</span></a>
-                              </div>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -115,9 +111,12 @@
             <div class="alert alert-danger" role="alert" id='alertBox-danger'>Error!</div>
             <div class="myTabDiv col-md-1">
               <ul id="myTab" class="nav nav-tabs nav-pills nav-stacked ">
-                <li class="active"><a href="#news" data-toggle="tab"><i class="fa fa-list fa-lg"></i></a></li>
+                <!-- <li class="active"><a href="#news" data-toggle="tab"><i class="fa fa-list fa-lg">新闻管理</i></a></li>
                 <li><a href="#users" data-toggle="tab"><i class="fa fa-users fa-lg"></i></a></li>
-                <li><a href="#comments" data-toggle="tab"><i class="fa fa-comments fa-lg"></i></a></li>
+                <li><a href="#comments" data-toggle="tab"><i class="fa fa-comments fa-lg"></i></a></li> -->
+                <li><a href="#news" data-toggle="tab"><i class="fa fa-lg"></i>新闻管理</a></li>
+                <li><a href="#users" data-toggle="tab"><i class="fa fa-lg"></i>用户管理</a></li>
+                <li><a href="#comments" data-toggle="tab"><i class="fa fa-lg"></i>评论管理</a></li>
               </ul>
             </div>
             <div class="tab-content col-md-11" id="TabContent">
@@ -127,10 +126,11 @@
                         <h1 class="title__h1 underscore">新闻管理</h1>
                     </div>
                 </div>
-
                 <div class="wrap wrap_white pt20">
                     <div class="container">
                       <div class="container wrap_white">
+                      <button type="button" class="btn btn-info" ><a href="./upload">上传新闻</a></button>
+
                           <table class="table table-bordered table-hover">
                             <colgroup>
                               <col style="width:10%">
