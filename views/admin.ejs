@@ -18,6 +18,7 @@
           .alert{
             position: fixed;
             width: 100%;
+            z-index: 100;
             display: none;
           }
           .btn-primary{
@@ -49,6 +50,11 @@
             height: 100%;
             background-color: #303d4a;
             padding: 0px !important;
+            position: absolute;
+            z-index: 99;
+          }
+          #TabContent{
+            float: right;
           }
           #myTab li a{
             margin: 0;
@@ -93,7 +99,7 @@
                                     <a href="./logout"><span>logout</span></a>
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -126,8 +132,7 @@
                         <h1 class="title__h1 underscore">新闻管理</h1>
                     </div>
                 </div>
-                <div class="wrap wrap_white pt20">
-                    <div class="container">
+                <div >
                       <div class="container wrap_white">
                       <button type="button" class="btn btn-info" ><a href="./upload">上传新闻</a></button>
 
@@ -152,7 +157,6 @@
 
                             </tbody>
                           </table>
-                      </div>
                     </div>
                 </div>
 
@@ -163,7 +167,7 @@
                         <h1 class="title__h1 underscore">用户管理</h1>
                     </div>
                 </div>
-                <div class="wrap wrap_white pt20">
+                <div >
                     <div class="container wrap_white">
                         <table class="table table-bordered table-hover">
                           <colgroup>
@@ -193,7 +197,7 @@
                         <h1 class="title__h1 underscore">评论管理</h1>
                     </div>
                 </div>
-                <div class="wrap wrap_white pt20">
+                <div >
                     <div class="container wrap_white">
                         <table class="table table-bordered table-hover">
                           <colgroup>

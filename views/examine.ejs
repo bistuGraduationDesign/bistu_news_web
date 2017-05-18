@@ -30,12 +30,18 @@
           position: fixed;
           width: 100%;
           display: none;
+          z-index: 100;
           text-align: center;
         }
         .myTabDiv{
           height: 100%;
           background-color: #303d4a;
           padding: 0px !important;
+          position: absolute;
+          z-index: 99;
+        }
+        #TabContent{
+          float: right;
         }
         #myTab li a{
           margin: 0;
@@ -336,6 +342,7 @@
                 },
               })
               .done(function(res) {
+                console.debug(res);
                 if(res.state){
                   alertMsg('success',res.info);
                   $('.thumbnail').eq(index).hide('slow');
