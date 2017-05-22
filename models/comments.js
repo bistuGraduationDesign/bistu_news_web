@@ -100,6 +100,34 @@ comments.remove = function(id, callback) {
 	});
 }
 
+comments.removeByNews = function(news, callback) {
+	//打开数据库
+	mongodb.open(function(err, db) {
+		if (err) {
+			return callback(err);
+		}
+		//读取 posts 集合
+		db.collection('comments', function(err, collection) {
+			if (err) {
+				mongodb.close();
+				return callback(err);
+			}
+			collection.remove({
+				news: news
+			}, {
+				safe: true
+			}, function(err, result) {
+				mongodb.close();
+				if (err) {
+					return callback(err);
+				}
+				callback(null);
+			});
+
+		});
+	});
+}
+
 comments.allComments = function(callback) {
 	//打开数据库
 	mongodb.open(function(err, db) {

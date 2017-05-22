@@ -523,11 +523,21 @@ module.exports = function(app) {
             };
             return res.send(msg);
           } else {
-            var msg = {
-              state: true,
-              info: "已删除该新闻！"
-            };
-            return res.send(msg);
+            comments.removeByNews(req.body.name, function(e){
+              if (e) {
+                var msg = {
+                  state: false,
+                  info: "error"
+                };
+                return res.send(msg);
+              } else {
+                var msg = {
+                  state: true,
+                  info: "已删除该新闻！"
+                };
+                return res.send(msg);
+              }
+            });
           }
         })
       } else if (type == "comment") {//删评论
