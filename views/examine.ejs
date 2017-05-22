@@ -59,6 +59,9 @@
         #myTab>li.active>a{
           background-color: #242d37;
         }
+        .tablecontent{
+          margin-left: 0;
+        }
         </style>
     </head>
     <body>
@@ -111,7 +114,7 @@
                         </div>
                     </div>
                     <div class="wrap wrap_white pt20">
-                        <div class="container">
+                        <div class="container tablecontent">
                             <div class="row">
                                 <div class="wrap-thumbnail">
 
@@ -128,7 +131,7 @@
                         </div>
                     </div>
                     <div class="wrap wrap_white pt20">
-                        <div class="container wrap_white">
+                        <div class="container tablecontent wrap_white">
                             <h3>现有管理员</h3>
                             <table class="table table-bordered table-hover">
                               <colgroup>
@@ -319,6 +322,23 @@
             btninit();
           });
         });
+        //change tab
+        let url=window.location.href;
+        var reg2 = /([^?]+)$/;
+        var blueurl = url.match(reg2)[1];
+        let index=0;
+        switch (blueurl) {
+          case "news":
+            index=0;
+            break;
+          case "admins":
+            index=1;
+            break;
+        }
+        console.log(index);
+        var tabli=$("#myTab li:eq("+index+") a");
+        tabli.tab("show");
+        //end change
         //button event
         var inst = $('[data-remodal-id=modal]').remodal();//模态框
         //model event
@@ -345,7 +365,8 @@
                 console.debug(res);
                 if(res.state){
                   alertMsg('success',res.info);
-                  $('.thumbnail').eq(index).hide('slow');
+                  // $('.thumbnail').eq(index).hide('slow');
+                  location.reload();
                 }else {
                   alertMsg('danger',res.info);
                 }
@@ -373,7 +394,8 @@
               .done(function(res) {
                 if(res.state){
                   alertMsg('success',res.info);
-                  $('.thumbnail').eq(index).hide('slow');
+                  // $('.thumbnail').eq(index).hide('slow');
+                  location.reload();
                 }else {
                   alertMsg('danger',res.info);
                 }
@@ -402,7 +424,7 @@
                 if(res.state){
                   alertMsg('success',res.info);
                   setTimeout(function () {
-                    location.reload();
+                    location.href="/examine?admins";
                   },500)
                 }else {
                   alertMsg('danger',res.info);
@@ -426,7 +448,7 @@
                 if(res.state){
                   alertMsg('success',res.info);
                   setTimeout(function () {
-                    location.reload();
+                    location.href="/examine?admins";
                   },500)
                 }else {
                   alertMsg('danger',res.info);

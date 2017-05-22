@@ -31,9 +31,6 @@
             width: 100%;
             float: right;
           }
-          .header__top {
-              background: #303d4a;
-          }
           .logo {
               display: block;
               background-image: url(../img/content/logo.png);
@@ -55,6 +52,7 @@
           }
           #TabContent{
             float: right;
+            padding-left: 0!important;
           }
           #myTab li a{
             margin: 0;
@@ -71,6 +69,9 @@
           }
           #myTab>li.active>a{
             background-color: #242d37;
+          }
+          .tablecontent{
+            margin-left: 0;
           }
         </style>
     </head>
@@ -120,7 +121,7 @@
                 <!-- <li class="active"><a href="#news" data-toggle="tab"><i class="fa fa-list fa-lg">新闻管理</i></a></li>
                 <li><a href="#users" data-toggle="tab"><i class="fa fa-users fa-lg"></i></a></li>
                 <li><a href="#comments" data-toggle="tab"><i class="fa fa-comments fa-lg"></i></a></li> -->
-                <li><a href="#news" data-toggle="tab"><i class="fa fa-lg"></i>新闻管理</a></li>
+                <li class="active"><a href="#news" data-toggle="tab"><i class="fa fa-lg"></i>新闻管理</a></li>
                 <li><a href="#users" data-toggle="tab"><i class="fa fa-lg"></i>用户管理</a></li>
                 <li><a href="#comments" data-toggle="tab"><i class="fa fa-lg"></i>评论管理</a></li>
               </ul>
@@ -133,7 +134,7 @@
                     </div>
                 </div>
                 <div >
-                      <div class="container wrap_white">
+                      <div class="container tablecontent wrap_white">
                       <button type="button" class="btn btn-info" ><a href="./upload">上传新闻</a></button>
 
                           <table class="table table-bordered table-hover">
@@ -168,7 +169,7 @@
                     </div>
                 </div>
                 <div >
-                    <div class="container wrap_white">
+                    <div class="container tablecontent wrap_white">
                         <table class="table table-bordered table-hover">
                           <colgroup>
                             <col style="width:10%">
@@ -198,7 +199,7 @@
                     </div>
                 </div>
                 <div >
-                    <div class="container wrap_white">
+                    <div class="container tablecontent wrap_white">
                         <table class="table table-bordered table-hover">
                           <colgroup>
                             <col style="width:5%">
@@ -356,6 +357,26 @@
           `);
       }
       //end render
+      //change tab
+      let url=window.location.href;
+      var reg2 = /([^?]+)$/;
+      var blueurl = url.match(reg2)[1];
+      let index=0;
+      switch (blueurl) {
+        case "news":
+          index=0;
+          break;
+        case "users":
+          index=1;
+          break;
+        case "comments":
+          index=2;
+          break;
+      }
+      console.log(index);
+      var tabli=$("#myTab li:eq("+index+") a");
+      tabli.tab("show");
+      //end change
       //button event
       var inst = $('[data-remodal-id=modal]').remodal();//模态框
       //model event
@@ -391,7 +412,7 @@
             if(res.state){
               alertMsg('success',res.info);
               setTimeout(function () {
-                location.reload();
+                location.href="/admin?news";
               },500)
             }else {
               alertMsg('danger',res.info);
@@ -415,7 +436,7 @@
             if(res.state){
               alertMsg('success',res.info);
               setTimeout(function () {
-                location.reload();
+                location.href="/admin?users";
               },500)
             }else {
               alertMsg('danger',res.info);
@@ -440,7 +461,7 @@
             if(res.state){
               alertMsg('success',res.info);
               setTimeout(function () {
-                location.reload();
+                location.href="/admin?comments";
               },500)
             }else {
               alertMsg('danger',res.info);

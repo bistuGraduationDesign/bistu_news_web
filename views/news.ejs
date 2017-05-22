@@ -250,29 +250,25 @@
             }else {
               let name=news.name;
               let content=$('#content').val();
-              $.ajax({
-                url: '/comment',
-                type: 'POST',
-                data: {
-                  name: name,
-                  content: content
-                }
-              })
-              .done(function(res) {
-                console.log("success");
-                console.log(res);
-                if(res.state){
-                  location.reload();
-                }else {
-                  alert(res.info);
-                }
-              })
-              .fail(function() {
-                console.log("error");
-              })
-              .always(function() {
-                console.log("complete");
-              });
+              if(content){
+                $.ajax({
+                  url: '/comment',
+                  type: 'POST',
+                  data: {
+                    name: name,
+                    content: content
+                  }
+                })
+                .done(function(res) {
+                  console.log("success");
+                  console.log(res);
+                  if(res.state){
+                    location.reload();
+                  }else {
+                    alert(res.info);
+                  }
+                });
+              }
             }
           });
           //if have userinfo change view
