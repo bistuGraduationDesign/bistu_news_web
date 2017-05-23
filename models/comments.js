@@ -58,7 +58,7 @@ comments.get = function(name, callback) {
 			collection.find({
 				news: new RegExp(name)
 			}, {
-				limit: 12
+				limit: 100
 			}).toArray(function(err, comments) {
 				mongodb.close();
 				if (err) {

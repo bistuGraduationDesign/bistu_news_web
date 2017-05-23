@@ -94,7 +94,7 @@ news.hazy = function(name, tongguo, callback) {
         name: new RegExp(name),
         tongguo: tongguo
       }, {
-        limit: 12
+        limit: 100
       }).toArray(function(err, news) {
         mongodb.close();
         if (err) {
@@ -122,7 +122,7 @@ news.gainType = function(type, callback) {
         type: type,
         tongguo: 1
       }, {
-        limit: 12
+        limit: 100
       }).toArray(function(err, news) {
         mongodb.close();
         if (err) {
